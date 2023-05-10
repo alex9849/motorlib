@@ -1,0 +1,64 @@
+package net.alex9849.pca9685port;
+
+import com.pi4j.io.exception.IOIllegalValueException;
+import com.pi4j.io.i2c.I2CRegister;
+
+public class PCA9685 implements AutoCloseable {
+    private final I2CRegister i2c_device;
+    private int reference_clock_speed;
+    private int address;
+
+    private final ByteMessageStruct mode1_reg;
+    private final ByteMessageStruct mode2_reg;
+    private final ByteMessageStruct prescale_reg;
+    private final PwmRegisters pwm_regs;
+
+    public PCA9685(I2CRegister i2c_device, int reference_clock_speed) {
+        this.i2c_device = i2c_device;
+        this.reference_clock_speed = reference_clock_speed;
+        mode1_reg = new ByteMessageStruct(i2c_device, (byte) 0x00);
+        mode2_reg = new ByteMessageStruct(i2c_device, (byte) 0x01);
+        prescale_reg = new ByteMessageStruct(i2c_device, (byte) 0xFE);
+        pwm_regs = new PwmRegisters(i2c_device, (byte) 0x06, 16);
+        this.reset();
+    }
+
+    public void reset() {
+        this.i2c_device.write(0x00);
+    }
+
+    public float getFrequency() {
+        byte prescale_result = prescale_reg.read();
+        if (prescale_result < 3) {
+            throw new IOIllegalValueException();
+        }
+        return reference_clock_speed / 4096 / prescale_result;
+    }
+
+    public void setFrequency(float freq) {
+        int prescale = (int) (reference_clock_speed / 4096 / freq + 0.5);
+        if(prescale < 3) {
+            throw new IllegalArgumentException("net.alex9849.pca9685port.PCA9685 cannot output at the given frequency");
+        }
+        byte old_mode = this.mode1_reg.read();
+        this.mode1_reg.write((byte) ((old_mode & 0x7F) | 0x10));
+        this.prescale_reg.write((byte) prescale);
+        this.mode1_reg.write(old_mode);
+        try {
+            this.wait(5);
+        } catch (InterruptedException ignored) {
+        } finally {
+            this.mode1_reg.write((byte) (old_mode | 0xA0));
+        }
+    }
+
+
+    @Override
+    public void close() throws Exception {
+        deinit();
+    }
+
+    public void deinit() {
+        reset();
+    }
+}
