@@ -7,11 +7,12 @@ public class PCA9685 implements AutoCloseable {
     private final I2CRegister i2c_device;
     private int reference_clock_speed;
     private int address;
+    private PCAChannels channels;
 
     private final ByteMessageStruct mode1_reg;
     private final ByteMessageStruct mode2_reg;
     private final ByteMessageStruct prescale_reg;
-    private final PwmRegisters pwm_regs;
+    protected final PWMRegisters pwm_regs;
 
     public PCA9685(I2CRegister i2c_device, int reference_clock_speed) {
         this.i2c_device = i2c_device;
@@ -19,7 +20,8 @@ public class PCA9685 implements AutoCloseable {
         mode1_reg = new ByteMessageStruct(i2c_device, (byte) 0x00);
         mode2_reg = new ByteMessageStruct(i2c_device, (byte) 0x01);
         prescale_reg = new ByteMessageStruct(i2c_device, (byte) 0xFE);
-        pwm_regs = new PwmRegisters(i2c_device, (byte) 0x06, 16);
+        pwm_regs = new PWMRegisters(i2c_device, (byte) 0x06, 16);
+        channels = new PCAChannels(this);
         this.reset();
     }
 
@@ -38,7 +40,7 @@ public class PCA9685 implements AutoCloseable {
     public void setFrequency(float freq) {
         int prescale = (int) (reference_clock_speed / 4096 / freq + 0.5);
         if(prescale < 3) {
-            throw new IllegalArgumentException("net.alex9849.pca9685port.PCA9685 cannot output at the given frequency");
+            throw new IllegalArgumentException("PCA9685 cannot output at the given frequency");
         }
         byte old_mode = this.mode1_reg.read();
         this.mode1_reg.write((byte) ((old_mode & 0x7F) | 0x10));
