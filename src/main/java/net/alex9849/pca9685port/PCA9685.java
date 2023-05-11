@@ -7,7 +7,7 @@ public class PCA9685 implements AutoCloseable {
     private final I2CRegister i2c_device;
     private int reference_clock_speed;
     private int address;
-    private PCAChannels channels;
+    protected final PCAChannels channels;
 
     private final ByteMessageStruct mode1_reg;
     private final ByteMessageStruct mode2_reg;
