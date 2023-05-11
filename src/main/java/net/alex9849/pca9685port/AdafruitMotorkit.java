@@ -1,26 +1,20 @@
 package net.alex9849.pca9685port;
 
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CRegister;
 
 public class AdafruitMotorkit {
     private final PCA9685 pca;
     private StepperMotor stepper1;
     private StepperMotor stepper2;
-    private I2CRegister ic2;
+    private I2C ic2;
     private final int steppersMicrosteps;
 
-    /**
-     *
-     * @param address I2C address. Should be 0x60 by default
-     * @param i2C I2C instance
-     */
-    public AdafruitMotorkit(byte address, I2C i2C) {
-        this(address, i2C, 16, 1600);
+    public AdafruitMotorkit(I2C i2cDevice) {
+        this(i2cDevice, 16, 1600);
     }
 
-    public AdafruitMotorkit(byte address, I2C i2C, int steppersMicrosteps, float pwmFrequency) {
-        this.ic2 = i2C.getRegister(address);
+    public AdafruitMotorkit(I2C i2cDevice, int steppersMicrosteps, float pwmFrequency) {
+        this.ic2 = i2cDevice;
         this.pca = new PCA9685(ic2, 25000000);
         this.pca.setFrequency(pwmFrequency);
         this.steppersMicrosteps = steppersMicrosteps;

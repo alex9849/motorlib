@@ -1,10 +1,11 @@
 package net.alex9849.pca9685port;
 
 import com.pi4j.io.exception.IOIllegalValueException;
+import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CRegister;
 
 public class PCA9685 implements AutoCloseable {
-    private final I2CRegister i2c_device;
+    private final I2C i2c_device;
     private int reference_clock_speed;
     private int address;
     protected final PCAChannels channels;
@@ -14,13 +15,13 @@ public class PCA9685 implements AutoCloseable {
     private final ByteMessageStruct prescale_reg;
     protected final PWMRegisters pwm_regs;
 
-    public PCA9685(I2CRegister i2c_device, int reference_clock_speed) {
+    public PCA9685(I2C i2c_device, int reference_clock_speed) {
         this.i2c_device = i2c_device;
         this.reference_clock_speed = reference_clock_speed;
-        mode1_reg = new ByteMessageStruct(i2c_device, (byte) 0x00);
-        mode2_reg = new ByteMessageStruct(i2c_device, (byte) 0x01);
-        prescale_reg = new ByteMessageStruct(i2c_device, (byte) 0xFE);
-        pwm_regs = new PWMRegisters(i2c_device, (byte) 0x06, 16);
+        mode1_reg = new ByteMessageStruct(i2c_device.getRegister(0x00));
+        mode2_reg = new ByteMessageStruct(i2c_device.getRegister(0x01));
+        prescale_reg = new ByteMessageStruct(i2c_device.getRegister(0xFE));
+        pwm_regs = new PWMRegisters(i2c_device, (byte) 0x06);
         channels = new PCAChannels(this);
         this.reset();
     }
