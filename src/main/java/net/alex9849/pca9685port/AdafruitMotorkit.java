@@ -10,6 +10,11 @@ public class AdafruitMotorkit {
     private I2CRegister ic2;
     private final int steppersMicrosteps;
 
+    /**
+     *
+     * @param address I2C address. Should be 0x60 by default
+     * @param i2C I2C instance
+     */
     public AdafruitMotorkit(byte address, I2C i2C) {
         this(address, i2C, 16, 1600);
     }
