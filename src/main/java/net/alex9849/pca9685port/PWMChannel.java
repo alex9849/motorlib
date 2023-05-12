@@ -23,7 +23,7 @@ public class PWMChannel {
 
     public void setDutyCycle(int value) {
         if(value < 0 || value > 0xFFFF) {
-            throw new IllegalArgumentException("Out of range: value %d not 0 <= value <= 65,535".formatted(value));
+            throw new IllegalArgumentException("Out of range: value " + value + " not 0 <= value <= 65,535");
         }
         if(value == 0xFFFF) {
             pca.pwm_regs.write(index, new PWMRegisters.PWMSignal((short) 0x1000, (short) 0));

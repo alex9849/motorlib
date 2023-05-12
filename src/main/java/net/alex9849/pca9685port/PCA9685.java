@@ -48,7 +48,7 @@ public class PCA9685 implements AutoCloseable {
         this.prescale_reg.write((byte) prescale);
         this.mode1_reg.write(old_mode);
         try {
-            this.wait(5);
+            Thread.sleep(5);
         } catch (InterruptedException ignored) {
         } finally {
             this.mode1_reg.write((byte) (old_mode | 0xA0));

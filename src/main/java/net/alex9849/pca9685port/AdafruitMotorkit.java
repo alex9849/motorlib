@@ -22,7 +22,7 @@ public class AdafruitMotorkit {
     private DCMotor getMotor(int idx, int ch1, int ch2, int ch3, int stepperIdx) {
         if(motors[idx] == null) {
             if(stepperMotors[stepperIdx] != null) {
-                throw new RuntimeException("Cannot use motor%d at the same time as stepper%d.".formatted(idx + 1, stepperIdx + 1));
+                throw new RuntimeException("Cannot use motor" + (idx + 1) + " at the same time as stepper" + (stepperIdx + 1) + ".");
             }
             pca.channels.get(ch1).setDutyCycle(0xFFFF);
             motors[idx] = new DCMotor(pca.channels.get(ch2), pca.channels.get(ch3));
