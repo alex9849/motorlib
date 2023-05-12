@@ -2,11 +2,9 @@ package net.alex9849.pca9685port;
 
 import com.pi4j.io.exception.IOIllegalValueException;
 import com.pi4j.io.i2c.I2C;
-import com.pi4j.io.i2c.I2CRegister;
 
 public class PCA9685 implements AutoCloseable {
-    private final I2C i2c_device;
-    private int reference_clock_speed;
+    private final int reference_clock_speed;
     private int address;
     protected final PCAChannels channels;
 
@@ -16,7 +14,6 @@ public class PCA9685 implements AutoCloseable {
     protected final PWMRegisters pwm_regs;
 
     public PCA9685(I2C i2c_device, int reference_clock_speed) {
-        this.i2c_device = i2c_device;
         this.reference_clock_speed = reference_clock_speed;
         mode1_reg = new ByteMessageStruct(i2c_device.getRegister(0x00));
         mode2_reg = new ByteMessageStruct(i2c_device.getRegister(0x01));

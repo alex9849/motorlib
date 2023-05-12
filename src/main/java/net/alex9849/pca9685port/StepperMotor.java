@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StepperMotor {
-    private List<PWMChannel> coils;
-    private List<Integer> curve;
-    private int microsteps;
+    private final List<PWMChannel> coils;
+    private final List<Integer> curve;
+    private final int microsteps;
     private int currentMicrostep;
 
     public StepperMotor(PWMChannel ain1, PWMChannel ain2,
