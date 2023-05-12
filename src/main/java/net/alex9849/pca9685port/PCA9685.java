@@ -27,7 +27,7 @@ public class PCA9685 implements AutoCloseable {
     }
 
     public void reset() {
-        this.i2c_device.write(0x00);
+        this.mode1_reg.write((byte) 0x00);
     }
 
     public float getFrequency() {
