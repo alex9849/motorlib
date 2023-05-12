@@ -11,8 +11,8 @@ public class ByteMessageStruct {
 
     public byte read() {
         //Todo This may have to be 1 or 2 bytes long
-        device.write(new byte[]{});
-        device.readByte();
+        //device.write(new byte[]{});
+        //device.readByte();
         return device.readByte();
     }
 

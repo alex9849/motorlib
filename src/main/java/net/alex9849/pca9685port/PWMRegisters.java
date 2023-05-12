@@ -38,7 +38,7 @@ public class PWMRegisters {
         ByteBuffer buf = ByteBuffer.allocate(payload_size)
                 .order(ByteOrder.LITTLE_ENDIAN);
         I2CRegister register = getRegister(index);
-        register.write(buf.array());
+        //register.write(buf.array());
         register.read(buf);
         buf.position(0);
         PWMSignal signal = new PWMSignal();
