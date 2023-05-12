@@ -21,8 +21,9 @@ public class DCMotor {
 
     public void setThrottle(Optional<Float> value) {
         if (value.isPresent() && (value.get() > 1.0 || value.get() < -1.0)) {
-           throttle = value;
+            throw new IllegalArgumentException("Value needs to be in [-1.0; 1.0]!");
         }
+        throttle = value;
         if(value.isEmpty()) {
             positivePwm.setDutyCycle(0);
             negativePwm.setDutyCycle(0);
