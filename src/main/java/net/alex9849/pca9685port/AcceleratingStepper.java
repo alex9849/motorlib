@@ -185,7 +185,7 @@ public class AcceleratingStepper implements StepperMotor {
 
     void runToPosition() throws InterruptedException {
         while (run()) {
-            Thread.sleep(1);
+            Thread.yield();
         }
     }
 
