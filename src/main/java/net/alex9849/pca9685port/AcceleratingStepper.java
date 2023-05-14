@@ -183,7 +183,7 @@ public class AcceleratingStepper implements StepperMotor {
         return speed != 0.0 || distanceToGo() != 0;
     }
 
-    void runToPosition() throws InterruptedException {
+    void runToPosition() {
         while (run()) {
             Thread.yield();
         }
@@ -199,7 +199,7 @@ public class AcceleratingStepper implements StepperMotor {
         return runSpeed();
     }
 
-    void runToNewPosition(long position) throws InterruptedException {
+    void runToNewPosition(long position) {
         moveTo(position);
         runToPosition();
     }
