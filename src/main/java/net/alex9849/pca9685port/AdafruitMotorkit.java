@@ -53,7 +53,7 @@ public class AdafruitMotorkit {
             }
             pca.channels.get(8).setDutyCycle(0xFFFF);
             pca.channels.get(13).setDutyCycle(0xFFFF);
-            stepperMotors[0] = new StepperMotor(
+            stepperMotors[0] = new StepperMotorImpl(
                     pca.channels.get(10),
                     pca.channels.get(9),
                     pca.channels.get(11),
@@ -71,7 +71,7 @@ public class AdafruitMotorkit {
             }
             pca.channels.get(7).setDutyCycle(0xFFFF);
             pca.channels.get(2).setDutyCycle(0xFFFF);
-            stepperMotors[1] = new StepperMotor(
+            stepperMotors[1] = new StepperMotorImpl(
                     pca.channels.get(4),
                     pca.channels.get(3),
                     pca.channels.get(5),
