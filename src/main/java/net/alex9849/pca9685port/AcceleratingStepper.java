@@ -16,6 +16,7 @@ public class AcceleratingStepper implements StepperMotor {
     private long lastStepTime;
     private StepSize stepSize;
     private Direction direction;
+    private final double doubleEpsilon = 000001d;
 
 
     public AcceleratingStepper(StepperMotor stepper) {
@@ -37,7 +38,7 @@ public class AcceleratingStepper implements StepperMotor {
     }
 
     public void setSpeed(double speed) {
-        if(this.speed == speed) {
+        if(Math.abs(this.speed - speed) < doubleEpsilon) {
             return;
         }
         if(speed < -maxSpeed) {
@@ -45,7 +46,7 @@ public class AcceleratingStepper implements StepperMotor {
         } else if(speed > maxSpeed) {
             speed = maxSpeed;
         }
-        if(speed == 0) {
+        if(Math.abs(speed) < doubleEpsilon) {
             stepInterval = 0;
         } else {
             stepInterval = (long) Math.abs(1000000.0 / speed);
@@ -90,13 +91,13 @@ public class AcceleratingStepper implements StepperMotor {
     }
 
     public void setAcceleration(double acceleration) {
-        if(acceleration == 0) {
-            return;
-        }
         if(acceleration < 0) {
             acceleration = -acceleration;
         }
-        if (this.acceleration != acceleration) {
+        if(acceleration < doubleEpsilon) {
+            return;
+        }
+        if (Math.abs(this.acceleration - acceleration) < doubleEpsilon) {
             n = (long) (n * (this.acceleration / acceleration));
             c0 = 0.676 * Math.sqrt(2.0 / acceleration) * 1000000.0;
             this.acceleration = acceleration;
@@ -234,7 +235,7 @@ public class AcceleratingStepper implements StepperMotor {
     }
 
     boolean isRunning() {
-        return !(speed == 0.0 && targetPosition == position);
+        return !(Math.abs(speed) < doubleEpsilon && targetPosition == position);
     }
 
     @Override
