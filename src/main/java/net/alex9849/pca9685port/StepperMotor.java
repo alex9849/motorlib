@@ -7,25 +7,18 @@ public interface StepperMotor {
     Direction getDirection();
 
 
-    public enum Direction {
-        FORWARD(1), BACKWARD(2);
-
-        final int v;
-        Direction(int v) {
-            this.v = v;
-        }
+    enum Direction {
+        FORWARD, BACKWARD;
     }
 
-    public enum StepSize {
-        SINGLE(1, new byte[]{0b0010, 0b0100, 0b0001, 0b1000}),
-        DOUBLE(2, new byte[]{0b1010, 0b0110, 0b0101, 0b1001}),
-        INTERLEAVE(3, new byte[]{0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000}),
-        MICROSTEP(4, new byte[]{});
+    enum StepSize {
+        SINGLE(new byte[]{0b0010, 0b0100, 0b0001, 0b1000}),
+        DOUBLE(new byte[]{0b1010, 0b0110, 0b0101, 0b1001}),
+        INTERLEAVE(new byte[]{0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000}),
+        MICROSTEP(new byte[]{});
 
-        final int v;
         final byte[] bytes;
-        StepSize(int v, byte[] bytes) {
-            this.v = v;
+        StepSize(byte[] bytes) {
             this.bytes = bytes;
         }
     }
