@@ -4,8 +4,7 @@ public class AcceleratingStepper implements StepperMotor {
     private final StepperMotor stepperMotor;
     private long position;
     private long targetPosition;
-    private double speed; //steps per second
-    private double targetSpeed; //target steps per second
+    private double speed;
     private double maxSpeed;
     private double acceleration;
     private long n;
@@ -24,7 +23,6 @@ public class AcceleratingStepper implements StepperMotor {
         this.position = 0;
         this.targetPosition = 0;
         this.speed = 0;
-        this.targetSpeed = 0;
         this.maxSpeed = 1.0;
         this.acceleration = 0;
         this.lastStepTime = 0;
