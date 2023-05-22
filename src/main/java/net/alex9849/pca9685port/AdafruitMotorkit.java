@@ -66,7 +66,7 @@ public class AdafruitMotorkit {
 
     public StepperMotor getStepper2() {
         if(stepperMotors[1] == null) {
-            if(motors[2] != null || motors[4] != null) {
+            if(motors[2] != null || motors[3] != null) {
                 throw new RuntimeException("Cannot use stepper2 at the same time as motor3 or motor4.");
             }
             pca.channels.get(7).setDutyCycle(0xFFFF);

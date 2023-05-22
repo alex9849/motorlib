@@ -53,30 +53,30 @@ public class AcceleratingStepper implements StepperMotor {
         this.speed = speed;
     }
 
-    double getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    void moveTo(long absolute) {
+    public void moveTo(long absolute) {
         if(targetPosition != absolute) {
             targetPosition = absolute;
             computeNewSpeed();
         }
     }
 
-    void move(long relative) {
+    public void move(long relative) {
         moveTo(position + relative);
     }
 
-    long getTargetPosition() {
+    public long getTargetPosition() {
         return targetPosition;
     }
 
-    long getCurrentPosition() {
+    public long getCurrentPosition() {
         return position;
     }
 
-    void setCurrentPosition(long position) {
+    public void setCurrentPosition(long position) {
         targetPosition = position;
         this.position = position;
         n = 0;
@@ -95,7 +95,7 @@ public class AcceleratingStepper implements StepperMotor {
         if(acceleration < doubleEpsilon) {
             return;
         }
-        if (Math.abs(this.acceleration - acceleration) < doubleEpsilon) {
+        if (Math.abs(this.acceleration - acceleration) >= doubleEpsilon) {
             n = (long) (n * (this.acceleration / acceleration));
             c0 = 0.676 * Math.sqrt(2.0 / acceleration) * 1000000.0;
             this.acceleration = acceleration;
@@ -159,7 +159,7 @@ public class AcceleratingStepper implements StepperMotor {
         if(stepInterval == 0) {
             return false;
         }
-        long time = System.currentTimeMillis();
+        long time = System.nanoTime() / 1000;
         if(time - lastStepTime >= stepInterval) {
             if(direction == Direction.FORWARD) {
                 position += 1;
@@ -182,13 +182,13 @@ public class AcceleratingStepper implements StepperMotor {
         return speed != 0.0 || distanceToGo() != 0;
     }
 
-    void runToPosition() {
+    public void runToPosition() {
         while (run()) {
             Thread.yield();
         }
     }
 
-    boolean runSpeedToPosition() {
+    public boolean runSpeedToPosition() {
         if (targetPosition == position)
             return false;
         if (targetPosition > position)
@@ -198,12 +198,12 @@ public class AcceleratingStepper implements StepperMotor {
         return runSpeed();
     }
 
-    void runToNewPosition(long position) {
+    public void runToNewPosition(long position) {
         moveTo(position);
         runToPosition();
     }
 
-    void setMaxSpeed(double speed) {
+    public void setMaxSpeed(double speed) {
         if(speed < 0) {
             speed = -speed;
         }
@@ -221,7 +221,7 @@ public class AcceleratingStepper implements StepperMotor {
         return maxSpeed;
     }
 
-    void stop() {
+    public void stop() {
         if (speed != 0.0)
         {
             long stepsToStop = (long)((speed * speed) / (2.0 * acceleration)) + 1;
@@ -232,7 +232,7 @@ public class AcceleratingStepper implements StepperMotor {
         }
     }
 
-    boolean isRunning() {
+    public boolean isRunning() {
         return !(Math.abs(speed) < doubleEpsilon && targetPosition == position);
     }
 

@@ -14,9 +14,7 @@ public class StepperMotorImpl implements StepperMotor {
     public StepperMotorImpl(PWMChannel ain1, PWMChannel ain2,
                             PWMChannel bin1, PWMChannel bin2, int microsteps) {
         //Adafruit motorkit supports normal digital io pins. This port doesn't do that currently.
-        this.coils = Arrays.asList(ain1, ain2, bin1, bin2);
-        this.currentMicrostep = 0;
-        this.microsteps = microsteps;
+        this.coils = Arrays.asList(ain2, bin1, ain1, bin2);
         for(PWMChannel channel : this.coils) {
             if(channel.getFrequency() < 1500) {
                 throw new IllegalArgumentException("PWMOut outputs for stepper coils must " +
@@ -30,9 +28,11 @@ public class StepperMotorImpl implements StepperMotor {
             throw new IllegalArgumentException("Microsteps must be even");
         }
         this.curve = new ArrayList<>();
-        for(int i = 0; i <= microsteps; i++) {
+        for(int i = 0; i <= microsteps + 1; i++) {
             this.curve.add((int) Math.round(0xFFFF * Math.sin(Math.PI / (2 * microsteps) * i)));
         }
+        this.currentMicrostep = 0;
+        this.microsteps = microsteps;
         this.updateCoils(false);
     }
 
