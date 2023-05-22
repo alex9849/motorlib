@@ -207,18 +207,18 @@ public class AcceleratingStepper implements StepperMotor {
         if(speed < 0) {
             speed = -speed;
         }
-        if(maxSpeed != speed) {
-            maxSpeed = speed;
-            cmin = 1000000.0 / speed;
-            if(n > 0) {
-                n = (long)((speed * speed) / (2.0 * acceleration));
+        if(Math.abs(maxSpeed - speed) > doubleEpsilon) {
+            this.maxSpeed = speed;
+            this.cmin = 1000000.0 / speed;
+            if(this.n > 0) {
+                this.n = (long)((this.speed * this.speed) / (2.0 * this.acceleration));
                 computeNewSpeed();
             }
         }
     }
 
     public double getMaxSpeed() {
-        return maxSpeed;
+        return this.maxSpeed;
     }
 
     public void stop() {
