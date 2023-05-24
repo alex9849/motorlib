@@ -24,7 +24,7 @@ public class StepperMotorImpl implements StepperMotor {
         if(microsteps < 2) {
             throw new IllegalArgumentException("Microsteps must be at least 2");
         }
-        if(microsteps % 2 == 1) {
+        if(Math.floorMod(microsteps, 2) == 1) {
             throw new IllegalArgumentException("Microsteps must be even");
         }
         this.curve = new ArrayList<>();
@@ -38,9 +38,9 @@ public class StepperMotorImpl implements StepperMotor {
 
     private void updateCoils(boolean microstepping) {
         int[] dutyCycles = new int[]{0, 0, 0, 0};
-        int trailingCoil = (this.currentMicrostep / this.microsteps) % 4;
-        int leadingCoil = (trailingCoil + 1) % 4;
-        int microstep = this.currentMicrostep % this.microsteps;
+        int trailingCoil = Math.floorMod(this.currentMicrostep / this.microsteps, 4);
+        int leadingCoil = Math.floorMod(trailingCoil + 1, 4);
+        int microstep = Math.floorMod(this.currentMicrostep, this.microsteps);
         dutyCycles[leadingCoil] = this.curve.get(microstep);
         dutyCycles[trailingCoil] = this.curve.get(this.microsteps - microstep);
 
@@ -76,7 +76,7 @@ public class StepperMotorImpl implements StepperMotor {
         } else {
             int halfstep = microsteps / 2;
             int fullstep = microsteps;
-            int additionalMicrosteps = currentMicrostep % halfstep;
+            int additionalMicrosteps = Math.floorMod(currentMicrostep, halfstep);
             if(additionalMicrosteps != 0) {
                 if(direction == Direction.FORWARD) {
                     currentMicrostep += halfstep - additionalMicrosteps;
@@ -88,8 +88,8 @@ public class StepperMotorImpl implements StepperMotor {
                 stepSize = halfstep;
             }
             int currentInterleave = currentMicrostep / halfstep;
-            if((style == StepSize.SINGLE && currentInterleave % 2 == 1)
-                    || (style == StepSize.DOUBLE && currentInterleave % 2 == 0)) {
+            if((style == StepSize.SINGLE && Math.floorMod(currentInterleave, 2) == 1)
+                    || (style == StepSize.DOUBLE && Math.floorMod(currentInterleave, 2) == 0)) {
                 stepSize = halfstep;
             } else if (style == StepSize.SINGLE || style == StepSize.DOUBLE) {
                 stepSize = fullstep;

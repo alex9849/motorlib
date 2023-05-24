@@ -157,6 +157,7 @@ public class AcceleratingStepper implements StepperMotor {
 
     public boolean runSpeed() {
         if(stepInterval == 0) {
+            release();
             return false;
         }
         long time = System.nanoTime() / 1000;
