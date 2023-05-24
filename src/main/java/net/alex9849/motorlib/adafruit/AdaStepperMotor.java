@@ -1,18 +1,21 @@
-package net.alex9849.pca9685port;
+package net.alex9849.motorlib.adafruit;
+
+import net.alex9849.motorlib.IStepperMotor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StepperMotorImpl implements StepperMotor {
+public class AdaStepperMotor implements IStepperMotor {
     private final List<PWMChannel> coils;
     private final List<Integer> curve;
     private final int microsteps;
     private int currentMicrostep;
-    private StepperMotor.Direction direction;
+    private IStepperMotor.Direction direction;
+    private StepSize stepSize;
 
-    public StepperMotorImpl(PWMChannel ain1, PWMChannel ain2,
-                            PWMChannel bin1, PWMChannel bin2, int microsteps) {
+    public AdaStepperMotor(PWMChannel ain1, PWMChannel ain2,
+                           PWMChannel bin1, PWMChannel bin2, int microsteps) {
         //Adafruit motorkit supports normal digital io pins. This port doesn't do that currently.
         this.coils = Arrays.asList(ain2, bin1, ain1, bin2);
         for(PWMChannel channel : this.coils) {
@@ -33,13 +36,13 @@ public class StepperMotorImpl implements StepperMotor {
         }
         this.currentMicrostep = 0;
         this.microsteps = microsteps;
-        this.updateCoils(false);
+        this.stepSize = StepSize.SINGLE;
     }
 
     private void updateCoils(boolean microstepping) {
-        int[] dutyCycles = new int[]{0, 0, 0, 0};
-        int trailingCoil = Math.floorMod(this.currentMicrostep / this.microsteps, 4);
-        int leadingCoil = Math.floorMod(trailingCoil + 1, 4);
+        int[] dutyCycles = new int[coils.size()];
+        int trailingCoil = Math.floorMod(this.currentMicrostep / this.microsteps, coils.size());
+        int leadingCoil = Math.floorMod(trailingCoil + 1, coils.size());
         int microstep = Math.floorMod(this.currentMicrostep, this.microsteps);
         dutyCycles[leadingCoil] = this.curve.get(microstep);
         dutyCycles[trailingCoil] = this.curve.get(this.microsteps - microstep);
@@ -56,10 +59,24 @@ public class StepperMotorImpl implements StepperMotor {
         }
     }
 
-    public void release() {
-        for(PWMChannel coil : this.coils) {
-            coil.setDutyCycle(0);
+    public void enable(boolean value) {
+        if(value) {
+            this.updateCoils(false);
+        } else {
+            for(PWMChannel coil : this.coils) {
+                coil.setDutyCycle(0);
+            }
         }
+    }
+
+    @Override
+    public void setStepSize(StepSize stepSize) {
+        this.stepSize = stepSize;
+    }
+
+    @Override
+    public StepSize getStepSize() {
+        return this.stepSize;
     }
 
     public Direction getDirection() {
@@ -69,9 +86,9 @@ public class StepperMotorImpl implements StepperMotor {
     /**
      * @return The current microstep
      */
-    public int oneStep(Direction direction, StepSize style) {
+    public int oneStep(Direction direction) {
         int stepSize = 0;
-        if(style == StepSize.MICROSTEP) {
+        if(this.stepSize == StepSize.MICROSTEP) {
             stepSize = 1;
         } else {
             int halfstep = microsteps / 2;
@@ -84,14 +101,14 @@ public class StepperMotorImpl implements StepperMotor {
                     currentMicrostep -= additionalMicrosteps;
                 }
                 stepSize = 0;
-            } else if (style == StepSize.INTERLEAVE) {
+            } else if (this.stepSize == StepSize.INTERLEAVE) {
                 stepSize = halfstep;
             }
             int currentInterleave = currentMicrostep / halfstep;
-            if((style == StepSize.SINGLE && Math.floorMod(currentInterleave, 2) == 1)
-                    || (style == StepSize.DOUBLE && Math.floorMod(currentInterleave, 2) == 0)) {
+            if((this.stepSize == StepSize.SINGLE && Math.floorMod(currentInterleave, 2) == 1)
+                    || (this.stepSize == StepSize.DOUBLE && Math.floorMod(currentInterleave, 2) == 0)) {
                 stepSize = halfstep;
-            } else if (style == StepSize.SINGLE || style == StepSize.DOUBLE) {
+            } else if (this.stepSize == StepSize.SINGLE || this.stepSize == StepSize.DOUBLE) {
                 stepSize = fullstep;
             }
         }
@@ -101,7 +118,7 @@ public class StepperMotorImpl implements StepperMotor {
         } else {
             currentMicrostep -= stepSize;
         }
-        updateCoils(style == StepSize.MICROSTEP);
+        updateCoils(this.stepSize == StepSize.MICROSTEP);
         return currentMicrostep;
     }
 

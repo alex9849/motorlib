@@ -1,9 +1,11 @@
-package net.alex9849.pca9685port;
+package net.alex9849.motorlib;
 
-public interface StepperMotor {
+public interface IStepperMotor {
 
-    void release();
-    int oneStep(Direction direction, StepSize style);
+    void enable(boolean value);
+    void setStepSize(StepSize stepSize);
+    StepSize getStepSize();
+    int oneStep(Direction direction);
     Direction getDirection();
 
 

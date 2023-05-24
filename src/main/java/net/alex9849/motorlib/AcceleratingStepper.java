@@ -1,7 +1,7 @@
-package net.alex9849.pca9685port;
+package net.alex9849.motorlib;
 
-public class AcceleratingStepper implements StepperMotor {
-    private final StepperMotor stepperMotor;
+public class AcceleratingStepper implements IStepperMotor {
+    private final IStepperMotor stepperMotor;
     private long position;
     private long targetPosition;
     private double speed;
@@ -18,7 +18,7 @@ public class AcceleratingStepper implements StepperMotor {
     private final double doubleEpsilon = 000001d;
 
 
-    public AcceleratingStepper(StepperMotor stepper) {
+    public AcceleratingStepper(IStepperMotor stepper) {
         this.stepperMotor = stepper;
         this.position = 0;
         this.targetPosition = 0;
@@ -86,6 +86,11 @@ public class AcceleratingStepper implements StepperMotor {
 
     public void setStepSize(StepSize stepSize) {
         this.stepSize = stepSize;
+    }
+
+    @Override
+    public StepSize getStepSize() {
+        return this.stepSize;
     }
 
     public void setAcceleration(double acceleration) {
@@ -166,7 +171,7 @@ public class AcceleratingStepper implements StepperMotor {
             } else {
                 position -= 1;
             }
-            oneStep(direction, stepSize);
+            oneStep(direction);
             lastStepTime = time;
             return true;
         } else {
@@ -237,13 +242,13 @@ public class AcceleratingStepper implements StepperMotor {
     }
 
     @Override
-    public void release() {
-        stepperMotor.release();
+    public void enable(boolean value) {
+        stepperMotor.enable(value);
     }
 
     @Override
-    public int oneStep(Direction direction, StepSize style) {
-        return stepperMotor.oneStep(direction, style);
+    public int oneStep(Direction direction) {
+        return stepperMotor.oneStep(direction);
     }
 
     @Override

@@ -1,12 +1,12 @@
-package net.alex9849.pca9685port;
+package net.alex9849.motorlib.adafruit;
 
-public class DCMotor {
+public class AdaDCMotor {
     private final PWMChannel positivePwm;
     private final PWMChannel negativePwm;
     private Float throttle;
     private Decay decayMode;
 
-    public DCMotor(PWMChannel positivePwm, PWMChannel negativePwm) {
+    public AdaDCMotor(PWMChannel positivePwm, PWMChannel negativePwm) {
         this.positivePwm = positivePwm;
         this.negativePwm = negativePwm;
         this.throttle = null;
