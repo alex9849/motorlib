@@ -1,5 +1,9 @@
 package net.alex9849.motorlib;
 
+/**
+ * This class is a Java port of https://github.com/waspinator/AccelStepper
+ *
+ */
 public class AcceleratingStepper implements IStepperMotor {
     private final IStepperMotor stepperMotor;
     private long position;
