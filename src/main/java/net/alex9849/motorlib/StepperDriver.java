@@ -6,18 +6,14 @@ import static net.alex9849.motorlib.IMotorDriverPin.PinState.LOW;
 public class StepperDriver implements IStepperMotor {
     private final IMotorDriverPin enablePin;
     private final IMotorDriverPin stepPin;
-    private IMotorDriverPin.PinState prevStepPin;
     private final IMotorDriverPin directionPin;
     private Direction direction;
-    private boolean initialized;
     private boolean enabled;
 
     public StepperDriver(IMotorDriverPin enablePin, IMotorDriverPin stepPin, IMotorDriverPin directionPin) {
         this.enablePin = enablePin;
         this.stepPin = stepPin;
         this.directionPin = directionPin;
-        this.prevStepPin = LOW;
-        this.initialized = false;
         this.enabled = !enablePin.isHigh();
     }
 
@@ -41,13 +37,8 @@ public class StepperDriver implements IStepperMotor {
         if(!this.isEnabled()) {
             enable();
         }
-        if(prevStepPin == LOW) {
-            stepPin.digitalWrite(HIGH);
-            prevStepPin = HIGH;
-        } else {
-            stepPin.digitalWrite(LOW);
-            prevStepPin = LOW;
-        }
+        stepPin.digitalWrite(HIGH);
+        stepPin.digitalWrite(LOW);
     }
 
     @Override

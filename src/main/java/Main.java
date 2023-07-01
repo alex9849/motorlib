@@ -109,23 +109,26 @@ public class Main {
         AcceleratingStepper acceleratingStepper2 = new AcceleratingStepper(stepperDriver2);
 
         int i = 0;
-        while (i < 1) {
-            acceleratingStepper.setMaxSpeed(8 * 2000);
+        long startTime = System.currentTimeMillis();
+        while (i < 2) {
+            acceleratingStepper.setMaxSpeed(8 * 200);
             acceleratingStepper.setAcceleration(8 * 300);
-            acceleratingStepper.move(8 * 650 * 30);
+            acceleratingStepper.move(8 * 200 * 10);
             acceleratingStepper.setDirection(acceleratingStepper.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
-            while (acceleratingStepper.distanceToGo() != 0) {
-                acceleratingStepper.run();
-            }
-            acceleratingStepper2.setMaxSpeed(8 * 2000);
+
+            acceleratingStepper2.setMaxSpeed(8 * 200);
             acceleratingStepper2.setAcceleration(8 * 300);
-            acceleratingStepper2.move(8 * 650 * 30);
+            acceleratingStepper2.move(8 * 200 * 10);
             acceleratingStepper2.setDirection(acceleratingStepper2.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
-            while (acceleratingStepper2.distanceToGo() != 0) {
+
+
+            while (acceleratingStepper.distanceToGo() != 0 || acceleratingStepper2.distanceToGo() != 0) {
+                acceleratingStepper.run();
                 acceleratingStepper2.run();
             }
             i++;
         }
+        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime)+ "ms");
         acceleratingStepper.release();
         acceleratingStepper2.release();
         System.out.println("Finish");

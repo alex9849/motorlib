@@ -40,10 +40,8 @@ public class AcceleratingStepper implements IStepperMotor {
         if(Math.abs(this.speed - speed) < doubleEpsilon) {
             return;
         }
-        if(speed < -maxSpeed) {
-            speed = -maxSpeed;
-        } else if(speed > maxSpeed) {
-            speed = maxSpeed;
+        if(speed > maxSpeed || speed < -maxSpeed) {
+            throw new IllegalArgumentException("Speed is larger as maxSpeed, or smaller as -maxSpeed");
         }
         if(Math.abs(speed) < doubleEpsilon) {
             stepInterval = 0;
@@ -173,10 +171,11 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     public boolean run() {
-        if(runSpeed()) {
+        boolean madeStep = runSpeed();
+        if(madeStep) {
             computeNewSpeed();
         }
-        return speed != 0.0 || distanceToGo() != 0;
+        return madeStep;
     }
 
     public void runToPosition() {
@@ -260,7 +259,7 @@ public class AcceleratingStepper implements IStepperMotor {
 
     @Override
     public void setDirection(Direction direction) {
-        if(direction == stepperMotor.getDirection()) {
+        if(stepperMotor.getDirection() == direction) {
             return;
         }
         this.move(-1 * this.position - this.targetPosition);
