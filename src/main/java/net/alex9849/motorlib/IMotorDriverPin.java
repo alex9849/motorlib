@@ -4,6 +4,8 @@ public interface IMotorDriverPin {
 
     void digitalWrite(PinState value);
 
+    boolean isHigh();
+
     enum PinState {
         HIGH, LOW
     }

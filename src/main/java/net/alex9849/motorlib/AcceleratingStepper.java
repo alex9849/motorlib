@@ -239,6 +239,16 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     @Override
+    public void enable() {
+        stepperMotor.enable();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return stepperMotor.isEnabled();
+    }
+
+    @Override
     public void oneStep() {
         stepperMotor.oneStep();
     }

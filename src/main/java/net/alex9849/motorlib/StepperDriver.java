@@ -10,6 +10,7 @@ public class StepperDriver implements IStepperMotor {
     private final IMotorDriverPin directionPin;
     private Direction direction;
     private boolean initialized;
+    private boolean enabled;
 
     public StepperDriver(IMotorDriverPin enablePin, IMotorDriverPin stepPin, IMotorDriverPin directionPin) {
         this.enablePin = enablePin;
@@ -17,20 +18,29 @@ public class StepperDriver implements IStepperMotor {
         this.directionPin = directionPin;
         this.prevStepPin = LOW;
         this.initialized = false;
+        this.enabled = !enablePin.isHigh();
     }
-
-    private void init() {
-        setDirection(direction);
-    }
-
 
     @Override
     public void release() {
+        enablePin.digitalWrite(HIGH);
+        this.enabled = false;
+    }
+
+    public void enable() {
         enablePin.digitalWrite(LOW);
+        this.enabled = true;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     @Override
     public void oneStep() {
+        if(!this.isEnabled()) {
+            enable();
+        }
         if(prevStepPin == LOW) {
             stepPin.digitalWrite(HIGH);
             prevStepPin = HIGH;

@@ -3,6 +3,8 @@ package net.alex9849.motorlib;
 public interface IStepperMotor {
 
     void release();
+    void enable();
+    boolean isEnabled();
     void oneStep();
     Direction getDirection();
     void setDirection(Direction direction);

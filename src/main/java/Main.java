@@ -54,6 +54,33 @@ public class Main {
 
         DigitalOutput enablePin1 = pi4J.create(cfgEnablePin1);
 
+        DigitalOutputConfigBuilder cfgDirPin2 = DigitalOutput
+                .newConfigBuilder(pi4J)
+                .address(14)
+                .shutdown(DigitalState.HIGH)
+                .initial(DigitalState.HIGH)
+                .provider("pigpio-digital-output");
+
+        DigitalOutput dirPin2 = pi4J.create(cfgDirPin2);
+
+        DigitalOutputConfigBuilder cfgStepPin2 = DigitalOutput
+                .newConfigBuilder(pi4J)
+                .address(15)
+                .shutdown(DigitalState.HIGH)
+                .initial(DigitalState.HIGH)
+                .provider("pigpio-digital-output");
+
+        DigitalOutput stepPin2 = pi4J.create(cfgStepPin2);
+
+        DigitalOutputConfigBuilder cfgEnablePin2 = DigitalOutput
+                .newConfigBuilder(pi4J)
+                .address(18)
+                .shutdown(DigitalState.HIGH)
+                .initial(DigitalState.HIGH)
+                .provider("pigpio-digital-output");
+
+        DigitalOutput enablePin2 = pi4J.create(cfgEnablePin2);
+
         class Pin implements IMotorDriverPin {
             DigitalOutput output;
 
@@ -69,36 +96,39 @@ public class Main {
                     this.output.low();
                 }
             }
+
+            @Override
+            public boolean isHigh() {
+                return this.output.isHigh();
+            }
         }
 
         StepperDriver stepperDriver = new StepperDriver(new Pin(enablePin1), new Pin(stepPin1), new Pin(dirPin1));
         AcceleratingStepper acceleratingStepper = new AcceleratingStepper(stepperDriver);
-        enablePin1.high();
-        //motorkit.getStepper1().release();
+        StepperDriver stepperDriver2 = new StepperDriver(new Pin(enablePin2), new Pin(stepPin2), new Pin(dirPin2));
+        AcceleratingStepper acceleratingStepper2 = new AcceleratingStepper(stepperDriver2);
 
-        long dir = 1;
-        if(true) {
-            while (true) {
-                //acceleratingStepper.setMaxSpeed(610);
-                acceleratingStepper.setMaxSpeed(8 * 2100);
-                acceleratingStepper.setAcceleration(8 * 300);
-                acceleratingStepper.move(8 * 650 * 30);
-                acceleratingStepper.setDirection(acceleratingStepper.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
-                while (acceleratingStepper.distanceToGo() != 0) {
-                    acceleratingStepper.run();
-                }
-                dir = dir * -1;
+        int i = 0;
+        while (i < 1) {
+            acceleratingStepper.setMaxSpeed(8 * 2000);
+            acceleratingStepper.setAcceleration(8 * 300);
+            acceleratingStepper.move(8 * 650 * 30);
+            acceleratingStepper.setDirection(acceleratingStepper.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
+            while (acceleratingStepper.distanceToGo() != 0) {
+                acceleratingStepper.run();
             }
-        } else {
-            acceleratingStepper.setSpeed(-610);
-            long endTime = System.currentTimeMillis() + 1000 * 60;
-            while (endTime > System.currentTimeMillis()) {
-                acceleratingStepper.runSpeed();
+            acceleratingStepper2.setMaxSpeed(8 * 2000);
+            acceleratingStepper2.setAcceleration(8 * 300);
+            acceleratingStepper2.move(8 * 650 * 30);
+            acceleratingStepper2.setDirection(acceleratingStepper2.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
+            while (acceleratingStepper2.distanceToGo() != 0) {
+                acceleratingStepper2.run();
             }
+            i++;
         }
         acceleratingStepper.release();
+        acceleratingStepper2.release();
         System.out.println("Finish");
-        //System.out.println("Time to run: " + (System.currentTimeMillis() - timeToRun));
     }
 
 }

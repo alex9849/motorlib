@@ -13,6 +13,7 @@ public class AdaStepperMotor implements IStepperMotor {
     private int currentMicrostep;
     private IStepperMotor.Direction direction;
     private StepSize stepSize;
+    private boolean enabled;
 
     public AdaStepperMotor(PWMChannel ain1, PWMChannel ain2,
                            PWMChannel bin1, PWMChannel bin2, int microsteps) {
@@ -58,12 +59,23 @@ public class AdaStepperMotor implements IStepperMotor {
         for(int i = 0; i < coils.size(); i++) {
             coils.get(i).setDutyCycle(dutyCycles[i]);
         }
+        this.enabled = true;
     }
 
     public void release() {
         for(PWMChannel coil : this.coils) {
             coil.setDutyCycle(0);
         }
+        this.enabled = false;
+    }
+
+    public void enable() {
+        updateCoils(this.stepSize == StepSize.MICROSTEP);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     public void setStepSize(StepSize stepSize) {
