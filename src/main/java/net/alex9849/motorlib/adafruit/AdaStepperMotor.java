@@ -18,6 +18,7 @@ public class AdaStepperMotor implements IStepperMotor {
                            PWMChannel bin1, PWMChannel bin2, int microsteps) {
         //Adafruit motorkit supports normal digital io pins. This port doesn't do that currently.
         this.coils = Arrays.asList(ain2, bin1, ain1, bin2);
+        this.direction = Direction.FORWARD;
         for(PWMChannel channel : this.coils) {
             if(channel.getFrequency() < 1500) {
                 throw new IllegalArgumentException("PWMOut outputs for stepper coils must " +
@@ -59,22 +60,16 @@ public class AdaStepperMotor implements IStepperMotor {
         }
     }
 
-    public void enable(boolean value) {
-        if(value) {
-            this.updateCoils(false);
-        } else {
-            for(PWMChannel coil : this.coils) {
-                coil.setDutyCycle(0);
-            }
+    public void release() {
+        for(PWMChannel coil : this.coils) {
+            coil.setDutyCycle(0);
         }
     }
 
-    @Override
     public void setStepSize(StepSize stepSize) {
         this.stepSize = stepSize;
     }
 
-    @Override
     public StepSize getStepSize() {
         return this.stepSize;
     }
@@ -83,10 +78,15 @@ public class AdaStepperMotor implements IStepperMotor {
         return direction;
     }
 
+    @Override
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
     /**
      * @return The current microstep
      */
-    public int oneStep(Direction direction) {
+    public void oneStep() {
         int stepSize = 0;
         if(this.stepSize == StepSize.MICROSTEP) {
             stepSize = 1;
@@ -119,7 +119,10 @@ public class AdaStepperMotor implements IStepperMotor {
             currentMicrostep -= stepSize;
         }
         updateCoils(this.stepSize == StepSize.MICROSTEP);
-        return currentMicrostep;
+    }
+
+    enum StepSize {
+        SINGLE, DOUBLE, INTERLEAVE, MICROSTEP
     }
 
 }

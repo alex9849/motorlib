@@ -4,7 +4,6 @@ import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
 import net.alex9849.motorlib.AcceleratingStepper;
-import net.alex9849.motorlib.IStepperMotor;
 import net.alex9849.motorlib.adafruit.AdafruitMotorkit;
 
 public class Main {
@@ -27,7 +26,6 @@ public class Main {
         //motorkit.getStepper1().release();
 
         if(true) {
-            acceleratingStepper.setStepSize(IStepperMotor.StepSize.DOUBLE);
             //acceleratingStepper.setMaxSpeed(610);
             acceleratingStepper.setMaxSpeed(20);
             acceleratingStepper.setAcceleration(300);
@@ -42,7 +40,7 @@ public class Main {
                 acceleratingStepper.runSpeed();
             }
         }
-        acceleratingStepper.enable(false);
+        acceleratingStepper.release();
         System.out.println("Finish");
         //System.out.println("Time to run: " + (System.currentTimeMillis() - timeToRun));
     }

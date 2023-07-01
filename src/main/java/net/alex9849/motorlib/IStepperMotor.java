@@ -2,26 +2,17 @@ package net.alex9849.motorlib;
 
 public interface IStepperMotor {
 
-    void enable(boolean value);
-    void setStepSize(StepSize stepSize);
-    StepSize getStepSize();
-    int oneStep(Direction direction);
+    void release();
+    void oneStep();
     Direction getDirection();
+    void setDirection(Direction direction);
 
 
     enum Direction {
         FORWARD, BACKWARD;
     }
 
-    enum StepSize {
-        SINGLE(new byte[]{0b0010, 0b0100, 0b0001, 0b1000}),
-        DOUBLE(new byte[]{0b1010, 0b0110, 0b0101, 0b1001}),
-        INTERLEAVE(new byte[]{0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001, 0b1001, 0b1000}),
-        MICROSTEP(new byte[]{});
-
-        final byte[] bytes;
-        StepSize(byte[] bytes) {
-            this.bytes = bytes;
-        }
+    enum MicroStepping {
+        FULL, HALF, MICRO_4, MICRO_8, MICRO_16, MICRO_32
     }
 }

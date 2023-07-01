@@ -17,7 +17,6 @@ public class AcceleratingStepper implements IStepperMotor {
     private double cmin;
     private long stepInterval;
     private long lastStepTime;
-    private StepSize stepSize;
     private Direction direction;
     private final double doubleEpsilon = 000001d;
 
@@ -35,7 +34,6 @@ public class AcceleratingStepper implements IStepperMotor {
         this.cn = 0;
         this.cmin = 1;
         this.direction = Direction.FORWARD;
-        this.stepSize = StepSize.SINGLE;
         this.setAcceleration(1);
     }
 
@@ -86,15 +84,6 @@ public class AcceleratingStepper implements IStepperMotor {
         n = 0;
         stepInterval = 0;
         speed = 0;
-    }
-
-    public void setStepSize(StepSize stepSize) {
-        this.stepSize = stepSize;
-    }
-
-    @Override
-    public StepSize getStepSize() {
-        return this.stepSize;
     }
 
     public void setAcceleration(double acceleration) {
@@ -175,7 +164,7 @@ public class AcceleratingStepper implements IStepperMotor {
             } else {
                 position -= 1;
             }
-            oneStep(direction);
+            oneStep();
             lastStepTime = time;
             return true;
         } else {
@@ -246,17 +235,25 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     @Override
-    public void enable(boolean value) {
-        stepperMotor.enable(value);
+    public void release() {
+        stepperMotor.release();
     }
 
     @Override
-    public int oneStep(Direction direction) {
-        return stepperMotor.oneStep(direction);
+    public void oneStep() {
+        stepperMotor.oneStep();
     }
 
     @Override
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public void setDirection(Direction direction) {
+        if(direction == this.direction) {
+            return;
+        }
+        this.move(this.position - this.targetPosition);
     }
 }
