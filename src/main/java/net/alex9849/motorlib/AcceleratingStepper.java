@@ -17,7 +17,6 @@ public class AcceleratingStepper implements IStepperMotor {
     private double cmin;
     private long stepInterval;
     private long lastStepTime;
-    private Direction direction;
     private final double doubleEpsilon = 000001d;
 
 
@@ -33,7 +32,7 @@ public class AcceleratingStepper implements IStepperMotor {
         this.c0 = 0;
         this.cn = 0;
         this.cmin = 1;
-        this.direction = Direction.FORWARD;
+        stepper.setDirection(Direction.FORWARD);
         this.setAcceleration(1);
     }
 
@@ -50,7 +49,7 @@ public class AcceleratingStepper implements IStepperMotor {
             stepInterval = 0;
         } else {
             stepInterval = (long) Math.abs(1000000.0 / speed);
-            direction = (speed > 0) ? Direction.FORWARD : Direction.BACKWARD;
+            stepperMotor.setDirection((speed > 0) ? Direction.FORWARD : Direction.BACKWARD);
         }
         this.speed = speed;
     }
@@ -118,21 +117,21 @@ public class AcceleratingStepper implements IStepperMotor {
 
         if(distanceToGo > 0) {
             if(n > 0) {
-                if((stepsToStop >= distanceToGo) || direction == Direction.BACKWARD) {
+                if((stepsToStop >= distanceToGo) || stepperMotor.getDirection() == Direction.BACKWARD) {
                     n = -stepsToStop;
                 }
             } else if(n < 0) {
-                if((stepsToStop < distanceToGo) && direction == Direction.FORWARD) {
+                if((stepsToStop < distanceToGo) && stepperMotor.getDirection() == Direction.FORWARD) {
                     n = -n;
                 }
             }
         } else  if(distanceToGo < 0) {
             if(n > 0) {
-                if((stepsToStop >= -distanceToGo) || direction == Direction.FORWARD) {
+                if((stepsToStop >= -distanceToGo) || stepperMotor.getDirection() == Direction.FORWARD) {
                     n = -stepsToStop;
                 }
             } else if(n < 0) {
-                if((stepsToStop < -distanceToGo) && direction == Direction.BACKWARD) {
+                if((stepsToStop < -distanceToGo) && stepperMotor.getDirection() == Direction.BACKWARD) {
                     n = -n;
                 }
             }
@@ -140,7 +139,7 @@ public class AcceleratingStepper implements IStepperMotor {
 
         if(n == 0) {
             cn = c0;
-            direction = (distanceToGo > 0) ? Direction.FORWARD : Direction.BACKWARD;
+            stepperMotor.setDirection((distanceToGo > 0) ? Direction.FORWARD : Direction.BACKWARD);
         } else {
             cn = cn - ((2.0 * cn) / ((4.0 * n) + 1));
             cn = Math.max(cn, cmin);
@@ -148,7 +147,7 @@ public class AcceleratingStepper implements IStepperMotor {
         n++;
         stepInterval = (long) cn;
         speed = 1000000.0 / cn;
-        if(direction == Direction.BACKWARD) {
+        if(stepperMotor.getDirection() == Direction.BACKWARD) {
             speed = -speed;
         }
     }
@@ -159,7 +158,7 @@ public class AcceleratingStepper implements IStepperMotor {
         }
         long time = System.nanoTime() / 1000;
         if(time - lastStepTime >= stepInterval) {
-            if(direction == Direction.FORWARD) {
+            if(stepperMotor.getDirection() == Direction.FORWARD) {
                 position += 1;
             } else {
                 position -= 1;
@@ -190,9 +189,9 @@ public class AcceleratingStepper implements IStepperMotor {
         if (targetPosition == position)
             return false;
         if (targetPosition > position)
-            direction = Direction.FORWARD;
+            stepperMotor.setDirection(Direction.FORWARD);
         else
-            direction = Direction.BACKWARD;
+            stepperMotor.setDirection(Direction.BACKWARD);
         return runSpeed();
     }
 
@@ -246,14 +245,14 @@ public class AcceleratingStepper implements IStepperMotor {
 
     @Override
     public Direction getDirection() {
-        return direction;
+        return stepperMotor.getDirection();
     }
 
     @Override
     public void setDirection(Direction direction) {
-        if(direction == this.direction) {
+        if(direction == stepperMotor.getDirection()) {
             return;
         }
-        this.move(this.position - this.targetPosition);
+        this.move(-1 * this.position - this.targetPosition);
     }
 }

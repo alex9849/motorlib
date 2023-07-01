@@ -6,7 +6,7 @@ import static net.alex9849.motorlib.IMotorDriverPin.PinState.LOW;
 public class StepperDriver implements IStepperMotor {
     private final IMotorDriverPin enablePin;
     private final IMotorDriverPin stepPin;
-    private final IMotorDriverPin.PinState prevStepPin;
+    private IMotorDriverPin.PinState prevStepPin;
     private final IMotorDriverPin directionPin;
     private Direction direction;
     private boolean initialized;
@@ -33,8 +33,10 @@ public class StepperDriver implements IStepperMotor {
     public void oneStep() {
         if(prevStepPin == LOW) {
             stepPin.digitalWrite(HIGH);
+            prevStepPin = HIGH;
         } else {
             stepPin.digitalWrite(LOW);
+            prevStepPin = LOW;
         }
     }
 
