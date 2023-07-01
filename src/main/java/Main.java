@@ -5,7 +5,7 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import net.alex9849.motorlib.AcceleratingStepper;
 import net.alex9849.motorlib.IMotorDriverPin;
-import net.alex9849.motorlib.IStepperMotor;
+import net.alex9849.motorlib.MultiStepper;
 import net.alex9849.motorlib.StepperDriver;
 
 public class Main {
@@ -105,19 +105,32 @@ public class Main {
 
         StepperDriver stepperDriver = new StepperDriver(new Pin(enablePin1), new Pin(stepPin1), new Pin(dirPin1));
         AcceleratingStepper acceleratingStepper = new AcceleratingStepper(stepperDriver);
+        acceleratingStepper.setMaxSpeed(8 * 400);
+        acceleratingStepper.setAcceleration(8 * 300);
+
         StepperDriver stepperDriver2 = new StepperDriver(new Pin(enablePin2), new Pin(stepPin2), new Pin(dirPin2));
         AcceleratingStepper acceleratingStepper2 = new AcceleratingStepper(stepperDriver2);
+        acceleratingStepper2.setMaxSpeed(8 * 200);
+        acceleratingStepper2.setAcceleration(8 * 300);
 
-        int i = 0;
         long startTime = System.currentTimeMillis();
+
+        acceleratingStepper.move(8 * 200 * 10);
+        acceleratingStepper2.move(8 * 200 * 20);
+
+        MultiStepper multiStepper = new MultiStepper();
+        multiStepper.addStepper(acceleratingStepper);
+        multiStepper.addStepper(acceleratingStepper2);
+        multiStepper.prepareRun();
+        while (multiStepper.runRound()) {
+            Thread.yield();
+        }
+
+        /*int i = 0;
         while (i < 2) {
-            acceleratingStepper.setMaxSpeed(8 * 200);
-            acceleratingStepper.setAcceleration(8 * 300);
             acceleratingStepper.move(8 * 200 * 10);
             acceleratingStepper.setDirection(acceleratingStepper.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
 
-            acceleratingStepper2.setMaxSpeed(8 * 200);
-            acceleratingStepper2.setAcceleration(8 * 300);
             acceleratingStepper2.move(8 * 200 * 10);
             acceleratingStepper2.setDirection(acceleratingStepper2.getDirection() == IStepperMotor.Direction.FORWARD? IStepperMotor.Direction.BACKWARD: IStepperMotor.Direction.FORWARD);
 
@@ -127,8 +140,10 @@ public class Main {
                 acceleratingStepper2.run();
             }
             i++;
-        }
+        }*/
         System.out.println("Time taken: " + (System.currentTimeMillis() - startTime)+ "ms");
+        System.out.println("Motor 1 finished: " + (acceleratingStepper.distanceToGo() == 0));
+        System.out.println("Motor 2 finished: " + (acceleratingStepper2.distanceToGo() == 0));
         acceleratingStepper.release();
         acceleratingStepper2.release();
         System.out.println("Finish");

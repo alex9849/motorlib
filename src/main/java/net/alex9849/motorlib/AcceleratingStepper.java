@@ -17,7 +17,7 @@ public class AcceleratingStepper implements IStepperMotor {
     private double cmin;
     private long stepInterval;
     private long lastStepTime;
-    private final double doubleEpsilon = 000001d;
+    private final double doubleEpsilon = 0.00001d;
 
 
     public AcceleratingStepper(IStepperMotor stepper) {

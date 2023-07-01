@@ -5,6 +5,10 @@ public interface IStepperMotor {
     void release();
     void enable();
     boolean isEnabled();
+    default boolean run() {
+        oneStep();
+        return true;
+    }
     void oneStep();
     Direction getDirection();
     void setDirection(Direction direction);
