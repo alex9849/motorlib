@@ -30,11 +30,11 @@ jobs:
           ${{ runner.os }}-maven-
     - name: Get the version
       id: get_version
-      run: echo "{VERSION}={GITHUB_REF/refs\/tags\//}" >> $PUBLISH_VERSION
+      run: echo "VERSION={GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Build project
       run: |
-        mvn versions:set -DnewVersion=${{ steps.get_version.outputs.PUBLISH_VERSION }}
+        mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
         mvn versions:commit
         mvn clean
         mvn -B package --file pom.xml
