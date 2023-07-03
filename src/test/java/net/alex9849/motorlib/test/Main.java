@@ -6,7 +6,7 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
 import net.alex9849.motorlib.AcceleratingStepper;
-import net.alex9849.motorlib.IMotorDriverPin;
+import net.alex9849.motorlib.IMotorPin;
 import net.alex9849.motorlib.MultiStepper;
 import net.alex9849.motorlib.StepperDriver;
 
@@ -83,7 +83,7 @@ public class Main {
 
         DigitalOutput enablePin2 = pi4J.create(cfgEnablePin2);
 
-        class Pin implements IMotorDriverPin {
+        class Pin implements IMotorPin {
             DigitalOutput output;
 
             Pin(DigitalOutput output) {
@@ -105,12 +105,12 @@ public class Main {
             }
         }
 
-        StepperDriver stepperDriver = new StepperDriver(new Pin(enablePin1), new Pin(stepPin1), new Pin(dirPin1));
+        StepperDriver stepperDriver = new StepperDriver(enablePin1, stepPin1, dirPin1);
         AcceleratingStepper acceleratingStepper = new AcceleratingStepper(stepperDriver);
         acceleratingStepper.setMaxSpeed(8 * 400);
         acceleratingStepper.setAcceleration(8 * 300);
 
-        StepperDriver stepperDriver2 = new StepperDriver(new Pin(enablePin2), new Pin(stepPin2), new Pin(dirPin2));
+        StepperDriver stepperDriver2 = new StepperDriver(enablePin2, stepPin2, dirPin2);
         AcceleratingStepper acceleratingStepper2 = new AcceleratingStepper(stepperDriver2);
         acceleratingStepper2.setMaxSpeed(8 * 200);
         acceleratingStepper2.setAcceleration(8 * 300);
@@ -146,8 +146,8 @@ public class Main {
         System.out.println("Time taken: " + (System.currentTimeMillis() - startTime)+ "ms");
         System.out.println("Motor 1 finished: " + (acceleratingStepper.distanceToGo() == 0));
         System.out.println("Motor 2 finished: " + (acceleratingStepper2.distanceToGo() == 0));
-        acceleratingStepper.release();
-        acceleratingStepper2.release();
+        acceleratingStepper.setEnable(false);
+        acceleratingStepper2.setEnable(false);
         System.out.println("Finish");
     }
 

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Adafruit_Motorkit_PI4J_Port</artifactId>
+    <groupId>net.alex9849</groupId>
+    <artifactId>motorlib</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -51,4 +51,12 @@
             <version>${pi4j.version}</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-artifact</url>
+        </repository>
+    </distributionManagement>
 </project>
