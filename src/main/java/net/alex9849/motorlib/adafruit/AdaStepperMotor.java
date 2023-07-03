@@ -1,5 +1,6 @@
 package net.alex9849.motorlib.adafruit;
 
+import net.alex9849.motorlib.Direction;
 import net.alex9849.motorlib.IStepperMotor;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class AdaStepperMotor implements IStepperMotor {
     private final List<Integer> curve;
     private final int microsteps;
     private int currentMicrostep;
-    private IStepperMotor.Direction direction;
+    private Direction direction;
     private StepSize stepSize;
     private boolean enabled;
 
@@ -62,15 +63,16 @@ public class AdaStepperMotor implements IStepperMotor {
         this.enabled = true;
     }
 
-    public void release() {
-        for(PWMChannel coil : this.coils) {
-            coil.setDutyCycle(0);
+    @Override
+    public void setEnable(boolean enable) {
+        if(enable) {
+            updateCoils(this.stepSize == StepSize.MICROSTEP);
+        } else {
+            for(PWMChannel coil : this.coils) {
+                coil.setDutyCycle(0);
+            }
+            this.enabled = false;
         }
-        this.enabled = false;
-    }
-
-    public void enable() {
-        updateCoils(this.stepSize == StepSize.MICROSTEP);
     }
 
     @Override

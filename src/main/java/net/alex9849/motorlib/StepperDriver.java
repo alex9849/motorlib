@@ -18,14 +18,13 @@ public class StepperDriver implements IStepperMotor {
     }
 
     @Override
-    public void release() {
-        enablePin.digitalWrite(HIGH);
-        this.enabled = false;
-    }
-
-    public void enable() {
-        enablePin.digitalWrite(LOW);
-        this.enabled = true;
+    public void setEnable(boolean enable) {
+        if(enable) {
+            enablePin.digitalWrite(LOW);
+        } else {
+            enablePin.digitalWrite(HIGH);
+        }
+        this.enabled = enable;
     }
 
     public boolean isEnabled() {
@@ -35,7 +34,7 @@ public class StepperDriver implements IStepperMotor {
     @Override
     public void oneStep() {
         if(!this.isEnabled()) {
-            enable();
+            setEnable(true);
         }
         stepPin.digitalWrite(HIGH);
         stepPin.digitalWrite(LOW);
@@ -50,7 +49,6 @@ public class StepperDriver implements IStepperMotor {
             directionPin.digitalWrite(LOW);
         }
     }
-
 
     @Override
     public Direction getDirection() {

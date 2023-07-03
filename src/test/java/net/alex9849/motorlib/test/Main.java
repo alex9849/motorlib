@@ -1,3 +1,5 @@
+package net.alex9849.motorlib.test;
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;

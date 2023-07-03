@@ -233,13 +233,8 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     @Override
-    public void release() {
-        stepperMotor.release();
-    }
-
-    @Override
-    public void enable() {
-        stepperMotor.enable();
+    public void setEnable(boolean enable) {
+        stepperMotor.setEnable(enable);
     }
 
     @Override

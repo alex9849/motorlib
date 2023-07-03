@@ -1,16 +1,22 @@
 package net.alex9849.motorlib.adafruit;
 
-public class AdaDCMotor {
+import net.alex9849.motorlib.Direction;
+import net.alex9849.motorlib.IDCMotor;
+
+public class AdaDCMotor implements IDCMotor {
     private final PWMChannel positivePwm;
     private final PWMChannel negativePwm;
     private Float throttle;
     private Decay decayMode;
+
+    private Direction direction;
 
     public AdaDCMotor(PWMChannel positivePwm, PWMChannel negativePwm) {
         this.positivePwm = positivePwm;
         this.negativePwm = negativePwm;
         this.throttle = null;
         this.decayMode = Decay.FAST_DECAY;
+        this.direction = Direction.FORWARD;
     }
 
     public Float getThrottle() {
@@ -57,6 +63,39 @@ public class AdaDCMotor {
 
     public void setDecayMode(Decay decayMode) {
         this.decayMode = decayMode;
+    }
+
+    @Override
+    public void setRunning(boolean running) {
+        if(running) {
+            if(this.direction == Direction.FORWARD) {
+                setThrottle(1.0f);
+            } else {
+                setThrottle(-1.0f);
+            }
+        } else {
+            this.setThrottle(0.0f);
+        }
+    }
+
+    @Override
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+        if(this.direction == Direction.FORWARD) {
+            setThrottle(getThrottle());
+        } else {
+            setThrottle(-1 * getThrottle());
+        }
+    }
+
+    @Override
+    public boolean isRunning() {
+        return getThrottle() != null && Math.abs(getThrottle()) > 0.0001;
+    }
+
+    @Override
+    public Direction getDirection() {
+        return this.direction;
     }
 
     public enum Decay {
