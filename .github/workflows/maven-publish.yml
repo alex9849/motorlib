@@ -25,6 +25,8 @@ jobs:
         server-id: ossrh
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
+        gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE
     - uses: actions/cache@v1
       with:
         path: ~/.m2/repository
@@ -35,15 +37,17 @@ jobs:
       id: get_version
       run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Build project
+    - name: Set version
       run: |
         mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
         mvn versions:commit
-        mvn clean
-        mvn -B package --file pom.xml
     - name: Publish to Maven Central Repository
-      run: mvn --batch-mode deploy
       env:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+      run: |
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          clean deploy -P release

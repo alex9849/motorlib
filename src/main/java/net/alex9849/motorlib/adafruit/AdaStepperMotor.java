@@ -97,9 +97,6 @@ public class AdaStepperMotor implements IStepperMotor {
         this.direction = direction;
     }
 
-    /**
-     * @return The current microstep
-     */
     public void oneStep() {
         int stepSize = 0;
         if(this.stepSize == StepSize.MICROSTEP) {
