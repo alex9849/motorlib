@@ -24,11 +24,11 @@ jobs:
         java-package: 'jdk'
         java-version: '11'
         check-latest: true
-        server-id: 'ossrh'
+        server-id: ossrh
         server-username: OSSRH_USERNAME
         server-password: OSSRH_PASSWORD
         gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-        gpg-passphrase: SIGN_KEY_PASS
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE
         cache: 'maven'
     - name: Get the version
       id: get_version
@@ -40,12 +40,11 @@ jobs:
         mvn versions:commit
     - name: Publish to Maven Central Repository
       env:
-        SIGN_KEY_PASS: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       run: |
         mvn \
           --no-transfer-progress \
-          --batch-mode -X \
-          --settings ~/.m2/settings.xml \
+          --batch-mode \
           clean deploy -P release
