@@ -44,5 +44,5 @@ jobs:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       run: |
-        mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:effective-pom
+        mvn --no-transfer-progress org.apache.maven.plugins:maven-help-plugin:3.1.0:effective-settings
         mvn --no-transfer-progress --batch-mode clean deploy -P release
