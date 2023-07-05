@@ -53,8 +53,8 @@
                 <version>1.6.7</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <serverId>alex9849-nexus</serverId>
+                    <nexusUrl>https://nexus.liggesmeyer.net/repository/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
@@ -142,11 +142,11 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>alex9849</id>
+            <id>alex9849-nexus</id>
             <url>https://nexus.liggesmeyer.net/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>alex9849</id>
+            <id>alex9849-nexus</id>
             <url>https://nexus.liggesmeyer.net/repository/maven-releases/</url>
         </repository>
     </distributionManagement>

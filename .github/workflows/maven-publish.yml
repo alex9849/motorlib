@@ -23,7 +23,7 @@ jobs:
         distribution: 'temurin'
         java-package: 'jdk'
         java-version: '11'
-        server-id: alex9849
+        server-id: 'alex9849-nexus'
         server-username: NEXUS_USERNAME
         server-password: NEXUS_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
@@ -42,7 +42,7 @@ jobs:
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-        NEXUS_PASSWORD: ${{ secrets.NEXUS_TOKEN }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run: |
         mvn --no-transfer-progress org.apache.maven.plugins:maven-help-plugin:3.1.0:effective-settings
         mvn --no-transfer-progress --batch-mode clean deploy -P release
