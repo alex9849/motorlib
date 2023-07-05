@@ -8,6 +8,26 @@
     <artifactId>motorlib</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A Java implementation of various motor drivers.</description>
+    <url>https://alexander.liggesmeyer.net</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>alex9849</name>
+            <email>me@alex9849.net</email>
+            <organization>alex9849</organization>
+            <organizationUrl>https://github.com/alex9849</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -69,10 +89,6 @@
     <profiles>
         <profile>
             <id>release</id>
-            <properties>
-                <gpg.executable>gpg2</gpg.executable>
-                <gpg.passphrase>${env.MAVEN_GPG_PASSPHRASE}</gpg.passphrase>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
