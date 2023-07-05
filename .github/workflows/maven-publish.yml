@@ -36,6 +36,8 @@ jobs:
       run: |
         mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
         mvn --no-transfer-progress versions:commit
+    - name: Log Settings.xml
+      run: cat ~/.m2/settings.xml
     - name: Publish to Maven Central Repository
       env:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
