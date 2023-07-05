@@ -23,11 +23,11 @@ jobs:
         distribution: 'temurin'
         java-package: 'jdk'
         java-version: '11'
-        server-id: ossrh
-        server-username: OSSRH_USERNAME
-        server-password: OSSRH_PASSWORD
-        gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-        gpg-passphrase: MAVEN_GPG_PASSPHRASE
+        server-id: alex9849
+        server-username: NEXUS_USERNAME
+        server-password: NEXUS_PASSWORD
+        gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
+        gpg-passphrase: MAVEN_PGP_PASSPHRASE
     - name: Get the version
       id: get_version
       run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
@@ -40,9 +40,9 @@ jobs:
       run: cat ~/.m2/settings.xml
     - name: Publish to Maven Central Repository
       env:
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
+        NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_TOKEN }}
       run: |
         mvn --no-transfer-progress org.apache.maven.plugins:maven-help-plugin:3.1.0:effective-settings
         mvn --no-transfer-progress --batch-mode clean deploy -P release
