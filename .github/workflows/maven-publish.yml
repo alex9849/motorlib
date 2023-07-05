@@ -36,13 +36,9 @@ jobs:
       run: |
         mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
         mvn --no-transfer-progress versions:commit
-    - name: Log Settings.xml
-      run: cat ~/.m2/settings.xml
     - name: Publish to Maven Central Repository
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-      run: |
-        mvn --no-transfer-progress org.apache.maven.plugins:maven-help-plugin:3.1.0:effective-settings
-        mvn --no-transfer-progress --batch-mode clean deploy -P release
+      run: mvn --no-transfer-progress --batch-mode clean deploy -P release
