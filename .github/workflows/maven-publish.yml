@@ -47,4 +47,5 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode -X \
+          --settings ~/.m2/settings.xml \
           clean deploy -P release
