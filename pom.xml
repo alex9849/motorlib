@@ -43,7 +43,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>alex9849-nexus</serverId>
-                    <nexusUrl>https://nexus.liggesmeyer.net/nexus</nexusUrl>
+                    <nexusUrl>https://nexus.liggesmeyer.net/nexus/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
