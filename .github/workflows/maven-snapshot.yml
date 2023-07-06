@@ -4,11 +4,8 @@
 name: Maven Deploy
 
 on:
-  workflow_dispatch:
-    inputs:
-      releaseversion:
-        description: 'Release version'
-        required: true
+  push:
+    branches: [develop]
 
 jobs:
   build:
@@ -32,21 +29,9 @@ jobs:
         server-password: NEXUS_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
-    - name: Set version
-      run: |
-        mvn versions:set -DnewVersion=${{ github.event.inputs.releaseversion }}
-        mvn --no-transfer-progress versions:commit
     - name: Publish to Nexus
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run: mvn --no-transfer-progress --batch-mode clean deploy -P release
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.event.inputs.releaseversion }}
-        release_name: ${{ github.event.inputs.releaseversion }}
