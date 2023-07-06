@@ -6,9 +6,14 @@ name: Maven Deploy
 on:
   workflow_dispatch:
     inputs:
-      releaseversion:
-        description: 'Release version'
+      releaseVersion:
+        description: "Default version to use when preparing a release."
         required: true
+        default: "X.Y.Z"
+      developmentVersion:
+        description: "Default version to use for new local working copy."
+        required: true
+        default: "X.Y.Z-SNAPSHOT"
 
 jobs:
   build:
@@ -31,21 +36,25 @@ jobs:
         server-password: NEXUS_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
-    - name: Set version
+
+    - name: Configure Git User
       run: |
-        mvn --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ github.event.inputs.releaseversion }}
-        mvn --no-transfer-progress --batch-mode versions:commit
-    - name: Publish to Nexus
+        git config user.email "actions@github.com"
+        git config user.name "GitHub Actions"
+
+    - name: Maven Release
+      run: mvn --no-transfer-progress --batch-mode clean release:prepare release:perform -B -DreleaseVersion=${{ github.event.inputs.releaseVersion }} -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-      run: mvn --no-transfer-progress --batch-mode clean deploy -P release
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.event.inputs.releaseversion }}
-        release_name: ${{ github.event.inputs.releaseversion }}
+        tag_name: ${{ github.event.inputs.releaseVersion }}
+        release_name: ${{ github.event.inputs.releaseVersion }}
