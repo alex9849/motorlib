@@ -53,6 +53,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>alex9849-nexus</serverId>
+                    <nexusUrl>https://nexus.liggesmeyer.net/repository/maven-releases/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
@@ -143,10 +144,6 @@
             <id>alex9849-nexus</id>
             <url>https://nexus.liggesmeyer.net/repository/maven-snapshots/</url>
         </snapshotRepository>
-        <repository>
-            <id>alex9849-nexus</id>
-            <url>https://nexus.liggesmeyer.net/repository/maven-releases/</url>
-        </repository>
     </distributionManagement>
 
 </project>
