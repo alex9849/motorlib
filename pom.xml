@@ -10,29 +10,12 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A Java library to control motor drivers.</description>
-    <url>https://alexander.liggesmeyer.net</url>
 
     <scm>
         <connection>scm:git:https://github.com/alex9849/motorlib.git</connection>
         <developerConnection>scm:git:https://github.com/alex9849/motorlib.git</developerConnection>
-        <url>https://github.com/alex9849/motorlib.git</url>
+        <url>https://github.com/alex9849/motorlib</url>
     </scm>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>alex9849</name>
-            <email>me@alex9849.net</email>
-            <organization>alex9849</organization>
-            <organizationUrl>https://github.com/alex9849</organizationUrl>
-        </developer>
-    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,8 +41,9 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <source>11</source>  <!-- same as <java.version> -->
-                    <target>11</target>    <!-- same as <java.version> -->
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>

@@ -5,12 +5,15 @@ name: Maven Package
 
 on:
   release:
-    types: [created]
+    types: [published]
+  push:
+    branches: [develop]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    environment: deploy
     permissions:
       contents: read
       packages: write
@@ -28,17 +31,20 @@ jobs:
         server-password: NEXUS_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
-    - name: Get the version
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-      shell: bash
-    - name: Set version
+    - name: Set the version
+      id: set_version
+      if: ${{ github.event_name == 'release' }}
       run: |
-        mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
+        echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+        mvn versions:set -DnewVersion=${{VERSION}}
         mvn --no-transfer-progress versions:commit
-    - name: Publish to Maven Central Repository
+      shell: bash
+    - name: Publish to Nexus
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
         NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
         NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run: mvn --no-transfer-progress --batch-mode clean deploy -P release
+    - name: Increment version number
+      if: ${{ github.event_name == 'release' }}
+      run: mvn -B release:prepare
