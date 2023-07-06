@@ -4,9 +4,12 @@
 name: Maven Deploy
 
 on:
-  release:
-    types:
-      - created
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Release version'
+        required: true
+        default: "X.Y.Z"
 
 jobs:
   build:
@@ -30,15 +33,19 @@ jobs:
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
 
-    - name: Get the version
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-      shell: bash
-
     - name: Set version
       run: |
-        mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
-        mvn --no-transfer-progress versions:commit
+        mvn --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }}
+        mvn --no-transfer-progress --batch-mode versions:commit
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.releaseVersion }}
+        release_name: ${{ github.event.inputs.releaseVersion }}
 
     - name: Publish to Nexus
       env:
