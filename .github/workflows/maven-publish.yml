@@ -9,6 +9,7 @@ on:
       releaseVersion:
         description: 'Release version'
         required: true
+        default: "X.Y.Z"
 
 jobs:
   build:
