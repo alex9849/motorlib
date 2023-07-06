@@ -53,7 +53,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>alex9849-nexus</serverId>
-                    <nexusUrl>https://nexus.liggesmeyer.net/repository/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
