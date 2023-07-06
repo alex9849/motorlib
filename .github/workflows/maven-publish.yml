@@ -34,8 +34,8 @@ jobs:
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
     - name: Set version
       run: |
-        mvn versions:set -DnewVersion=${{ github.event.inputs.releaseversion }}
-        mvn --no-transfer-progress versions:commit
+        mvn --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ github.event.inputs.releaseversion }}
+        mvn --no-transfer-progress --batch-mode versions:commit
     - name: Publish to Nexus
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
