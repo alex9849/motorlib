@@ -31,14 +31,16 @@ jobs:
         server-password: NEXUS_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_PGP_SECRET_KEY }}
         gpg-passphrase: MAVEN_PGP_PASSPHRASE
-    - name: Set the version
-      id: set_version
+    - name: Get the version
+      id: get_version
+      if: ${{ github.event_name == 'release' }}
+      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Set version
       if: ${{ github.event_name == 'release' }}
       run: |
-        echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-        mvn versions:set -DnewVersion=${{VERSION}}
+        mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
         mvn --no-transfer-progress versions:commit
-      shell: bash
     - name: Publish to Nexus
       env:
         MAVEN_PGP_PASSPHRASE: ${{ secrets.MAVEN_PGP_PASSPHRASE }}
