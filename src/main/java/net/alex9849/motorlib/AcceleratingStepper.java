@@ -210,7 +210,7 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Performs exactly one step, if enough time has passed since the last step.
-     * Consider acceleration and calculates the new speed for the next step.
+     * Considers acceleration and calculates the new speed for the next step.
      * @return True, if a step has been made. False, if not.
      */
     public boolean run() {
@@ -220,7 +220,6 @@ public class AcceleratingStepper implements IStepperMotor {
         }
         return madeStep;
     }
-
 
     public void runToPosition() {
         while (run()) {
