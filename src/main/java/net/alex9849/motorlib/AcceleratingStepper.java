@@ -32,6 +32,11 @@ public class AcceleratingStepper implements IStepperMotor {
         this.setAcceleration(1);
     }
 
+    /**
+     * Sets the current speed
+     * @param speed The speed in steps/second. Negative values will let the motor run backwards. Potive values will let it run forwards.
+     * @throws IllegalArgumentException If speed is not in the bounds of [-maxSpeed; maxSpeed]
+     */
     public void setSpeed(double speed) {
         if(Math.abs(this.speed - speed) < doubleEpsilon) {
             return;
@@ -48,10 +53,18 @@ public class AcceleratingStepper implements IStepperMotor {
         this.speed = speed;
     }
 
+    /**
+     *
+     * @return The current speed
+     */
     public double getSpeed() {
         return speed;
     }
 
+    /**
+     * Moves the motor to the absolute position
+     * @param absolute The absolute position
+     */
     public void moveTo(long absolute) {
         if(targetPosition != absolute) {
             targetPosition = absolute;
@@ -59,18 +72,34 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    /**
+     * Moves the motor to the position relative to it's current position.
+     * @param relative The relative position. Negative values will let the motor run backwards. Positve values forwards.
+     */
     public void move(long relative) {
         moveTo(position + relative);
     }
 
+    /**
+     *
+     * @return The current target position as given by moveTo() and move()
+     */
     public long getTargetPosition() {
         return targetPosition;
     }
 
+    /**
+     *
+     * @return The current position
+     */
     public long getCurrentPosition() {
         return position;
     }
 
+    /**
+     *
+     * @param position Sets the current position of the motor
+     */
     public void setCurrentPosition(long position) {
         targetPosition = position;
         this.position = position;
@@ -79,6 +108,10 @@ public class AcceleratingStepper implements IStepperMotor {
         speed = 0;
     }
 
+    /**
+     * Sets the acceletation of the motor.
+     * @param acceleration Accelereation in steps/(seconds * seconds)
+     */
     public void setAcceleration(double acceleration) {
         if(acceleration < 0) {
             acceleration = -acceleration;
@@ -94,6 +127,10 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    /**
+     *
+     * @return The difference between the current position and the target position. Can be nagative in case the motor currently runs backwards.
+     */
     public long distanceToGo() {
         return targetPosition - position;
     }
@@ -146,6 +183,11 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    /**
+     * Performs exactly one step with the current speed, if enough time has passed since the last step.
+     * Does not consider acceleration.
+     * @return True, if a step has been made. False, if not.
+     */
     public boolean runSpeed() {
         if(stepInterval == 0) {
             return false;
@@ -166,6 +208,11 @@ public class AcceleratingStepper implements IStepperMotor {
 
     }
 
+    /**
+     * Performs exactly one step, if enough time has passed since the last step.
+     * Consider acceleration and calculates the new speed for the next step.
+     * @return True, if a step has been made. False, if not.
+     */
     public boolean run() {
         boolean madeStep = runSpeed();
         if(madeStep) {
@@ -174,12 +221,18 @@ public class AcceleratingStepper implements IStepperMotor {
         return madeStep;
     }
 
+
     public void runToPosition() {
         while (run()) {
             Thread.yield();
         }
     }
 
+    /**
+     * Performs exactly one step, if enough time has passed since the last step.
+     * Does not consider acceleration and only runs till the target position has been reached.
+     * @return True, if a step has been made. False, if not.
+     */
     public boolean runSpeedToPosition() {
         if (targetPosition == position)
             return false;
@@ -190,11 +243,10 @@ public class AcceleratingStepper implements IStepperMotor {
         return runSpeed();
     }
 
-    public void runToNewPosition(long position) {
-        moveTo(position);
-        runToPosition();
-    }
-
+    /**
+     * Sets the maximum allowd speed
+     * @param speed The maximum speed in steps/second.
+     */
     public void setMaxSpeed(double speed) {
         if(speed < 0) {
             speed = -speed;
@@ -209,10 +261,17 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    /**
+     *
+     * @return The current maximum speed.
+     */
     public double getMaxSpeed() {
         return this.maxSpeed;
     }
 
+    /**
+     * Adviced the motor to stop while deaccelerating. Does only sets the required target position!
+     */
     public void stop() {
         if (speed != 0.0)
         {
@@ -224,6 +283,10 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    /**
+     *
+     * @return True if the motor is curently running. (speed != 0 or target position not reached)
+     */
     public boolean isRunning() {
         return !(Math.abs(speed) < doubleEpsilon && targetPosition == position);
     }
