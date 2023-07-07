@@ -60,4 +60,10 @@ public class StepperDriver implements IStepperMotor {
     public Direction getDirection() {
         return direction;
     }
+
+    @Override
+    public void shutdown() {
+        IStepperMotor.super.shutdown();
+        this.stepPin.digitalWrite(LOW);
+    }
 }

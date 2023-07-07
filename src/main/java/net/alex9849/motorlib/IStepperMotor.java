@@ -1,6 +1,6 @@
 package net.alex9849.motorlib;
 
-public interface IStepperMotor {
+public interface IStepperMotor extends IMotor {
 
     /**
      * Sets the motor to enabled or not. If enabled the motor will get current applied by the motor driver.
@@ -29,4 +29,9 @@ public interface IStepperMotor {
     void oneStep();
     Direction getDirection();
     void setDirection(Direction direction);
+
+    @Override
+    default void shutdown() {
+        this.setEnable(false);
+    }
 }

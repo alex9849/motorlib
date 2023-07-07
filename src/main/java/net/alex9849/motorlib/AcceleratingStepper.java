@@ -317,4 +317,10 @@ public class AcceleratingStepper implements IStepperMotor {
         }
         this.move(-1 * this.position - this.targetPosition);
     }
+
+    @Override
+    public void shutdown() {
+        stepperMotor.shutdown();
+        this.setCurrentPosition(0);
+    }
 }

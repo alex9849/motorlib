@@ -1,6 +1,6 @@
 package net.alex9849.motorlib;
 
-public interface IDCMotor {
+public interface IDCMotor extends IMotor {
 
     void setRunning(boolean running);
 
@@ -10,4 +10,8 @@ public interface IDCMotor {
 
     Direction getDirection();
 
+    @Override
+    default void shutdown() {
+        this.setRunning(false);
+    }
 }
