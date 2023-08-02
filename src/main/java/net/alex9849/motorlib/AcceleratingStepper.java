@@ -34,17 +34,18 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Sets the current speed
+     *
      * @param speed The speed in steps/second. Negative values will let the motor run backwards. Potive values will let it run forwards.
      * @throws IllegalArgumentException If speed is not in the bounds of [-maxSpeed; maxSpeed]
      */
     public void setSpeed(double speed) {
-        if(Math.abs(this.speed - speed) < doubleEpsilon) {
+        if (Math.abs(this.speed - speed) < doubleEpsilon) {
             return;
         }
-        if(speed > maxSpeed || speed < -maxSpeed) {
+        if (speed > maxSpeed || speed < -maxSpeed) {
             throw new IllegalArgumentException("Speed is larger as maxSpeed, or smaller as -maxSpeed");
         }
-        if(Math.abs(speed) < doubleEpsilon) {
+        if (Math.abs(speed) < doubleEpsilon) {
             stepInterval = 0;
         } else {
             stepInterval = (long) Math.abs(1000000.0 / speed);
@@ -54,7 +55,6 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     /**
-     *
      * @return The current speed
      */
     public double getSpeed() {
@@ -63,10 +63,11 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Moves the motor to the absolute position
+     *
      * @param absolute The absolute position
      */
     public void moveTo(long absolute) {
-        if(targetPosition != absolute) {
+        if (targetPosition != absolute) {
             targetPosition = absolute;
             computeNewSpeed();
         }
@@ -74,6 +75,7 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Moves the motor to the position relative to it's current position.
+     *
      * @param relative The relative position. Negative values will let the motor run backwards. Positve values forwards.
      */
     public void move(long relative) {
@@ -81,7 +83,6 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     /**
-     *
      * @return The current target position as given by moveTo() and move()
      */
     public long getTargetPosition() {
@@ -89,7 +90,6 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     /**
-     *
      * @return The current position
      */
     public long getCurrentPosition() {
@@ -97,7 +97,6 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     /**
-     *
      * @param position Sets the current position of the motor
      */
     public void setCurrentPosition(long position) {
@@ -110,13 +109,14 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Sets the acceletation of the motor.
+     *
      * @param acceleration Accelereation in steps/(seconds * seconds)
      */
     public void setAcceleration(double acceleration) {
-        if(acceleration < 0) {
+        if (acceleration < 0) {
             acceleration = -acceleration;
         }
-        if(acceleration < doubleEpsilon) {
+        if (acceleration < doubleEpsilon) {
             return;
         }
         if (Math.abs(this.acceleration - acceleration) >= doubleEpsilon) {
@@ -127,8 +127,11 @@ public class AcceleratingStepper implements IStepperMotor {
         }
     }
 
+    public double getAcceleration() {
+        return acceleration;
+    }
+
     /**
-     *
      * @return The difference between the current position and the target position. Can be nagative in case the motor currently runs backwards.
      */
     public long distanceToGo() {
@@ -139,36 +142,36 @@ public class AcceleratingStepper implements IStepperMotor {
         long distanceToGo = distanceToGo();
         long stepsToStop = (long) ((speed * speed) / (2 * acceleration));
 
-        if(distanceToGo == 0 && stepsToStop <= 1) {
+        if (distanceToGo == 0 && stepsToStop <= 1) {
             stepInterval = 0;
             speed = 0;
             n = 0;
             return;
         }
 
-        if(distanceToGo > 0) {
-            if(n > 0) {
-                if((stepsToStop >= distanceToGo) || stepperMotor.getDirection() == Direction.BACKWARD) {
+        if (distanceToGo > 0) {
+            if (n > 0) {
+                if ((stepsToStop >= distanceToGo) || stepperMotor.getDirection() == Direction.BACKWARD) {
                     n = -stepsToStop;
                 }
-            } else if(n < 0) {
-                if((stepsToStop < distanceToGo) && stepperMotor.getDirection() == Direction.FORWARD) {
+            } else if (n < 0) {
+                if ((stepsToStop < distanceToGo) && stepperMotor.getDirection() == Direction.FORWARD) {
                     n = -n;
                 }
             }
-        } else  if(distanceToGo < 0) {
-            if(n > 0) {
-                if((stepsToStop >= -distanceToGo) || stepperMotor.getDirection() == Direction.FORWARD) {
+        } else if (distanceToGo < 0) {
+            if (n > 0) {
+                if ((stepsToStop >= -distanceToGo) || stepperMotor.getDirection() == Direction.FORWARD) {
                     n = -stepsToStop;
                 }
-            } else if(n < 0) {
-                if((stepsToStop < -distanceToGo) && stepperMotor.getDirection() == Direction.BACKWARD) {
+            } else if (n < 0) {
+                if ((stepsToStop < -distanceToGo) && stepperMotor.getDirection() == Direction.BACKWARD) {
                     n = -n;
                 }
             }
         }
 
-        if(n == 0) {
+        if (n == 0) {
             cn = c0;
             stepperMotor.setDirection((distanceToGo > 0) ? Direction.FORWARD : Direction.BACKWARD);
         } else {
@@ -178,7 +181,7 @@ public class AcceleratingStepper implements IStepperMotor {
         n++;
         stepInterval = (long) cn;
         speed = 1000000.0 / cn;
-        if(stepperMotor.getDirection() == Direction.BACKWARD) {
+        if (stepperMotor.getDirection() == Direction.BACKWARD) {
             speed = -speed;
         }
     }
@@ -186,15 +189,16 @@ public class AcceleratingStepper implements IStepperMotor {
     /**
      * Performs exactly one step with the current speed, if enough time has passed since the last step.
      * Does not consider acceleration.
+     *
      * @return True, if a step has been made. False, if not.
      */
     public boolean runSpeed() {
-        if(stepInterval == 0) {
+        if (stepInterval == 0) {
             return false;
         }
         long time = System.nanoTime() / 1000;
-        if(time - lastStepTime >= stepInterval) {
-            if(stepperMotor.getDirection() == Direction.FORWARD) {
+        if (time - lastStepTime >= stepInterval) {
+            if (stepperMotor.getDirection() == Direction.FORWARD) {
                 position += 1;
             } else {
                 position -= 1;
@@ -211,11 +215,12 @@ public class AcceleratingStepper implements IStepperMotor {
     /**
      * Performs exactly one step, if enough time has passed since the last step.
      * Considers acceleration and calculates the new speed for the next step.
+     *
      * @return True, if a step has been made. False, if not.
      */
     public boolean run() {
         boolean madeStep = runSpeed();
-        if(madeStep) {
+        if (madeStep) {
             computeNewSpeed();
         }
         return madeStep;
@@ -230,6 +235,7 @@ public class AcceleratingStepper implements IStepperMotor {
     /**
      * Performs exactly one step, if enough time has passed since the last step.
      * Does not consider acceleration and only runs till the target position has been reached.
+     *
      * @return True, if a step has been made. False, if not.
      */
     public boolean runSpeedToPosition() {
@@ -244,24 +250,24 @@ public class AcceleratingStepper implements IStepperMotor {
 
     /**
      * Sets the maximum allowd speed
+     *
      * @param speed The maximum speed in steps/second.
      */
     public void setMaxSpeed(double speed) {
-        if(speed < 0) {
+        if (speed < 0) {
             speed = -speed;
         }
-        if(Math.abs(maxSpeed - speed) > doubleEpsilon) {
+        if (Math.abs(maxSpeed - speed) > doubleEpsilon) {
             this.maxSpeed = speed;
             this.cmin = 1000000.0 / speed;
-            if(this.n > 0) {
-                this.n = (long)((this.speed * this.speed) / (2.0 * this.acceleration));
+            if (this.n > 0) {
+                this.n = (long) ((this.speed * this.speed) / (2.0 * this.acceleration));
                 computeNewSpeed();
             }
         }
     }
 
     /**
-     *
      * @return The current maximum speed.
      */
     public double getMaxSpeed() {
@@ -272,9 +278,8 @@ public class AcceleratingStepper implements IStepperMotor {
      * Adviced the motor to stop while deaccelerating. Does only sets the required target position!
      */
     public void stop() {
-        if (speed != 0.0)
-        {
-            long stepsToStop = (long)((speed * speed) / (2.0 * acceleration)) + 1;
+        if (speed != 0.0) {
+            long stepsToStop = (long) ((speed * speed) / (2.0 * acceleration)) + 1;
             if (speed > 0)
                 move(stepsToStop);
             else
@@ -283,7 +288,6 @@ public class AcceleratingStepper implements IStepperMotor {
     }
 
     /**
-     *
      * @return True if the motor is curently running. (speed != 0 or target position not reached)
      */
     public boolean isRunning() {
@@ -312,10 +316,37 @@ public class AcceleratingStepper implements IStepperMotor {
 
     @Override
     public void setDirection(Direction direction) {
-        if(stepperMotor.getDirection() == direction) {
+        if (stepperMotor.getDirection() == direction) {
             return;
         }
         this.move(-1 * this.position - this.targetPosition);
+    }
+
+    public long estimateTimeTillCompletion() {
+        long distanceToGo = Math.abs(distanceToGo());
+        double currentSpeed = Math.abs(this.speed);
+
+        double stepsToStopNow = Math.ceil((Math.pow(currentSpeed, 2)) / (2 * acceleration));
+        stepsToStopNow = Math.min(stepsToStopNow, distanceToGo);
+
+        double topSpeed = Math.min(maxSpeed, currentSpeed + Math.sqrt((distanceToGo - stepsToStopNow) * acceleration));
+
+        double stepsSpeedDown = Math.ceil((Math.pow(topSpeed, 2)) / (2 * acceleration));
+        boolean isSpeedDownPhase = distanceToGo <= stepsSpeedDown;
+
+
+        double stepsSpeedUp = 0;
+        double timeSpeedUp = 0;
+        if (!isSpeedDownPhase) {
+            stepsSpeedUp = (long) (((Math.pow(topSpeed, 2)) / (2 * acceleration)) - ((Math.pow(currentSpeed, 2)) / (2 * acceleration)));
+            timeSpeedUp = (topSpeed - currentSpeed) / acceleration;
+        }
+
+
+        double timeSpeedDown = topSpeed / acceleration;
+        double timeTopSpeed = (distanceToGo - (stepsSpeedDown + stepsSpeedUp)) / topSpeed;
+
+        return (long) ((timeSpeedUp + timeTopSpeed + timeSpeedDown) * 1000);
     }
 
     @Override
