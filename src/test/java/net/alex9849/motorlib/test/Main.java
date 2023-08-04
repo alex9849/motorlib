@@ -123,7 +123,6 @@ public class Main {
         MultiStepper multiStepper = new MultiStepper();
         multiStepper.addStepper(acceleratingStepper);
         multiStepper.addStepper(acceleratingStepper2);
-        multiStepper.prepareRun();
         while (multiStepper.runRound()) {
             Thread.yield();
         }

@@ -20,12 +20,12 @@ public class MultiStepper {
 
     public boolean addStepper(AcceleratingStepper motor) {
         if(readyToRun) {
-            throw new IllegalArgumentException("MultiStepper already prepared!");
+            throw new IllegalArgumentException("MultiStepper already running!");
         }
         return stepperMotors.add(motor);
     }
 
-    public void prepareRun() {
+    private void prepareRun() {
         long maxDistance = 0;
 
         for(AcceleratingStepper motor : stepperMotors) {
@@ -55,7 +55,7 @@ public class MultiStepper {
             prepareRun();
         }
         if(pivotMotor == null) {
-            return true;
+            return false;
         }
         if(!pivotOvershooting && pivotMotor.run()) {
             pivotStepsMade++;
