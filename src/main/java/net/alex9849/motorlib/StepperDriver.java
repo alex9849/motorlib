@@ -1,25 +1,29 @@
 package net.alex9849.motorlib;
 
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import net.alex9849.motorlib.motor.Direction;
+import net.alex9849.motorlib.motor.IStepperMotor;
+import net.alex9849.motorlib.pin.IPin;
+import net.alex9849.motorlib.pin.Pi4JPin;
 
-import static net.alex9849.motorlib.IMotorPin.PinState.HIGH;
-import static net.alex9849.motorlib.IMotorPin.PinState.LOW;
+import static net.alex9849.motorlib.pin.IPin.PinState.HIGH;
+import static net.alex9849.motorlib.pin.IPin.PinState.LOW;
 
 public class StepperDriver implements IStepperMotor {
-    private final IMotorPin enablePin;
-    private final IMotorPin stepPin;
-    private final IMotorPin directionPin;
+    private final IPin enablePin;
+    private final IPin stepPin;
+    private final IPin directionPin;
     private Direction direction;
     private Boolean enabled;
 
-    public StepperDriver(IMotorPin enablePin, IMotorPin stepPin, IMotorPin directionPin) {
+    public StepperDriver(IPin enablePin, IPin stepPin, IPin directionPin) {
         this.enablePin = enablePin;
         this.stepPin = stepPin;
         this.directionPin = directionPin;
     }
 
     public StepperDriver(DigitalOutput enablePin, DigitalOutput stepPin, DigitalOutput directionPin) {
-        this(new Pi4JMotorDriverPin(enablePin), new Pi4JMotorDriverPin(stepPin), new Pi4JMotorDriverPin(directionPin));
+        this(new Pi4JPin(enablePin), new Pi4JPin(stepPin), new Pi4JPin(directionPin));
     }
 
     @Override

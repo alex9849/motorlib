@@ -1,4 +1,4 @@
-package net.alex9849.motorlib;
+package net.alex9849.motorlib.motor;
 
 public interface IDCMotor extends IMotor {
 

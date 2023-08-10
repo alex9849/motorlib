@@ -1,16 +1,16 @@
-package net.alex9849.motorlib;
+package net.alex9849.motorlib.pin;
 
 import com.pi4j.io.gpio.digital.DigitalOutput;
 
-public class Pi4JMotorDriverPin implements IMotorPin {
+public class Pi4JPin implements IPin {
     private DigitalOutput output;
-    public Pi4JMotorDriverPin(DigitalOutput digitalOutput) {
+    public Pi4JPin(DigitalOutput digitalOutput) {
         this.output = digitalOutput;
     }
 
     @Override
-    public void digitalWrite(IMotorPin.PinState value) {
-        if(value == IMotorPin.PinState.HIGH) {
+    public void digitalWrite(IPin.PinState value) {
+        if(value == IPin.PinState.HIGH) {
             this.output.high();
         } else {
             this.output.low();

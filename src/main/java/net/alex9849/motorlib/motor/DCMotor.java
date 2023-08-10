@@ -1,13 +1,15 @@
-package net.alex9849.motorlib;
+package net.alex9849.motorlib.motor;
+
+import net.alex9849.motorlib.pin.IPin;
 
 public class DCMotor implements IDCMotor {
-    private IMotorPin runPin;
-    private IMotorPin dirPin;
-    private IMotorPin.PinState runningState;
+    private IPin runPin;
+    private IPin dirPin;
+    private IPin.PinState runningState;
     private Direction direction;
     private Boolean running;
 
-    public DCMotor(IMotorPin runPin, IMotorPin dirPin, IMotorPin.PinState runningState) {
+    public DCMotor(IPin runPin, IPin dirPin, IPin.PinState runningState) {
         this.runPin = runPin;
         this.dirPin = dirPin;
         this.runningState = runningState;
@@ -21,10 +23,10 @@ public class DCMotor implements IDCMotor {
         if(running) {
             this.runPin.digitalWrite(runningState);
         } else {
-            if(runningState == IMotorPin.PinState.HIGH) {
-                this.runPin.digitalWrite(IMotorPin.PinState.LOW);
+            if(runningState == IPin.PinState.HIGH) {
+                this.runPin.digitalWrite(IPin.PinState.LOW);
             } else {
-                this.runPin.digitalWrite(IMotorPin.PinState.HIGH);
+                this.runPin.digitalWrite(IPin.PinState.HIGH);
             }
         }
     }
@@ -33,16 +35,16 @@ public class DCMotor implements IDCMotor {
     public void setDirection(Direction direction) {
         this.direction = direction;
         if(this.direction == Direction.FORWARD) {
-            this.dirPin.digitalWrite(IMotorPin.PinState.HIGH);
+            this.dirPin.digitalWrite(IPin.PinState.HIGH);
         } else {
-            this.dirPin.digitalWrite(IMotorPin.PinState.LOW);
+            this.dirPin.digitalWrite(IPin.PinState.LOW);
         }
     }
 
     @Override
     public boolean isRunning() {
         if(running == null) {
-            running = runPin.isHigh() && runningState == IMotorPin.PinState.HIGH;
+            running = runPin.isHigh() && runningState == IPin.PinState.HIGH;
         }
         return running;
     }

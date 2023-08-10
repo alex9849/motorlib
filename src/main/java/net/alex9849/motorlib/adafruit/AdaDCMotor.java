@@ -1,7 +1,7 @@
 package net.alex9849.motorlib.adafruit;
 
-import net.alex9849.motorlib.Direction;
-import net.alex9849.motorlib.IDCMotor;
+import net.alex9849.motorlib.motor.Direction;
+import net.alex9849.motorlib.motor.IDCMotor;
 
 public class AdaDCMotor implements IDCMotor {
     private final PWMChannel positivePwm;

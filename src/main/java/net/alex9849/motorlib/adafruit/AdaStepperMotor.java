@@ -1,7 +1,7 @@
 package net.alex9849.motorlib.adafruit;
 
-import net.alex9849.motorlib.Direction;
-import net.alex9849.motorlib.IStepperMotor;
+import net.alex9849.motorlib.motor.Direction;
+import net.alex9849.motorlib.motor.IStepperMotor;
 
 import java.util.ArrayList;
 import java.util.Arrays;

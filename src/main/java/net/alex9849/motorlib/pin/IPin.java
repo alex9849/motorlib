@@ -1,6 +1,6 @@
-package net.alex9849.motorlib;
+package net.alex9849.motorlib.pin;
 
-public interface IMotorPin {
+public interface IPin {
 
     void digitalWrite(PinState value);
 

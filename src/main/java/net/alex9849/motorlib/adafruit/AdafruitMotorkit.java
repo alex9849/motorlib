@@ -1,7 +1,7 @@
 package net.alex9849.motorlib.adafruit;
 
 import com.pi4j.io.i2c.I2C;
-import net.alex9849.motorlib.IStepperMotor;
+import net.alex9849.motorlib.motor.IStepperMotor;
 
 public class AdafruitMotorkit {
     private final IStepperMotor[] stepperMotors = new IStepperMotor[2];

@@ -5,10 +5,10 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder;
 import com.pi4j.io.gpio.digital.DigitalState;
-import net.alex9849.motorlib.AcceleratingStepper;
-import net.alex9849.motorlib.IMotorPin;
-import net.alex9849.motorlib.MultiStepper;
 import net.alex9849.motorlib.StepperDriver;
+import net.alex9849.motorlib.motor.AcceleratingStepper;
+import net.alex9849.motorlib.motor.MultiStepper;
+import net.alex9849.motorlib.pin.IPin;
 
 public class Main {
 
@@ -40,7 +40,8 @@ public class Main {
 
         DigitalOutputConfigBuilder cfgStepPin1 = DigitalOutput
                 .newConfigBuilder(pi4J)
-                .address(3)
+                //.address(15)
+                .address(4)
                 .shutdown(DigitalState.HIGH)
                 .initial(DigitalState.HIGH)
                 .provider("pigpio-digital-output");
@@ -49,13 +50,15 @@ public class Main {
 
         DigitalOutputConfigBuilder cfgEnablePin1 = DigitalOutput
                 .newConfigBuilder(pi4J)
-                .address(4)
+                //.address(14)
+                .address(3)
                 .shutdown(DigitalState.HIGH)
                 .initial(DigitalState.HIGH)
                 .provider("pigpio-digital-output");
 
         DigitalOutput enablePin1 = pi4J.create(cfgEnablePin1);
 
+        /*
         DigitalOutputConfigBuilder cfgDirPin2 = DigitalOutput
                 .newConfigBuilder(pi4J)
                 .address(14)
@@ -83,7 +86,9 @@ public class Main {
 
         DigitalOutput enablePin2 = pi4J.create(cfgEnablePin2);
 
-        class Pin implements IMotorPin {
+         */
+
+        class Pin implements IPin {
             DigitalOutput output;
 
             Pin(DigitalOutput output) {
@@ -107,23 +112,26 @@ public class Main {
 
         StepperDriver stepperDriver = new StepperDriver(enablePin1, stepPin1, dirPin1);
         AcceleratingStepper acceleratingStepper = new AcceleratingStepper(stepperDriver);
-        acceleratingStepper.setMaxSpeed(8 * 400);
-        acceleratingStepper.setAcceleration(8 * 300);
+        acceleratingStepper.setMaxSpeed(300);
+        acceleratingStepper.setAcceleration(200);
 
+        /*
         StepperDriver stepperDriver2 = new StepperDriver(enablePin2, stepPin2, dirPin2);
         AcceleratingStepper acceleratingStepper2 = new AcceleratingStepper(stepperDriver2);
         acceleratingStepper2.setMaxSpeed(8 * 200);
         acceleratingStepper2.setAcceleration(8 * 300);
+         */
 
         long startTime = System.currentTimeMillis();
 
-        acceleratingStepper.move(8 * 200 * 10);
-        acceleratingStepper2.move(8 * 200 * 20);
+        acceleratingStepper.move(20 * 200);
+        //acceleratingStepper2.move(8 * 200 * 20);
 
         MultiStepper multiStepper = new MultiStepper();
         multiStepper.addStepper(acceleratingStepper);
-        multiStepper.addStepper(acceleratingStepper2);
-        while (multiStepper.runRound()) {
+        //multiStepper.addStepper(acceleratingStepper2);
+        while (acceleratingStepper.distanceToGo() != 0) {
+            acceleratingStepper.run();
             Thread.yield();
         }
 
@@ -144,9 +152,9 @@ public class Main {
         }*/
         System.out.println("Time taken: " + (System.currentTimeMillis() - startTime)+ "ms");
         System.out.println("Motor 1 finished: " + (acceleratingStepper.distanceToGo() == 0));
-        System.out.println("Motor 2 finished: " + (acceleratingStepper2.distanceToGo() == 0));
-        acceleratingStepper.setEnable(false);
-        acceleratingStepper2.setEnable(false);
+       //System.out.println("Motor 2 finished: " + (acceleratingStepper2.distanceToGo() == 0));
+        acceleratingStepper.shutdown();
+        //acceleratingStepper2.setEnable(false);
         System.out.println("Finish");
     }
 
