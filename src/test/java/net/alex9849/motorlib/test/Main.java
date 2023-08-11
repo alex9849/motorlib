@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import net.alex9849.motorlib.StepperDriver;
 import net.alex9849.motorlib.motor.AcceleratingStepper;
 import net.alex9849.motorlib.motor.MultiStepper;
-import net.alex9849.motorlib.pin.IPin;
+import net.alex9849.motorlib.pin.IOutputPin;
 
 public class Main {
 
@@ -88,7 +88,7 @@ public class Main {
 
          */
 
-        class Pin implements IPin {
+        class Pin implements IOutputPin {
             DigitalOutput output;
 
             Pin(DigitalOutput output) {

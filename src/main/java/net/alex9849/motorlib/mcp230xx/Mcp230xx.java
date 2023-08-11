@@ -5,7 +5,7 @@ import com.pi4j.io.i2c.I2C;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class Mcp230xx extends Mcp23xxx {
+public abstract class Mcp230xx extends Mcp23xxx {
     public Mcp230xx(I2C i2cDevice) {
         super(i2cDevice);
     }

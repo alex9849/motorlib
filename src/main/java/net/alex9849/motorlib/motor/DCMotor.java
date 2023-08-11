@@ -1,15 +1,15 @@
 package net.alex9849.motorlib.motor;
 
-import net.alex9849.motorlib.pin.IPin;
+import net.alex9849.motorlib.pin.IOutputPin;
 
 public class DCMotor implements IDCMotor {
-    private IPin runPin;
-    private IPin dirPin;
-    private IPin.PinState runningState;
+    private IOutputPin runPin;
+    private IOutputPin dirPin;
+    private IOutputPin.PinState runningState;
     private Direction direction;
     private Boolean running;
 
-    public DCMotor(IPin runPin, IPin dirPin, IPin.PinState runningState) {
+    public DCMotor(IOutputPin runPin, IOutputPin dirPin, IOutputPin.PinState runningState) {
         this.runPin = runPin;
         this.dirPin = dirPin;
         this.runningState = runningState;
@@ -23,10 +23,10 @@ public class DCMotor implements IDCMotor {
         if(running) {
             this.runPin.digitalWrite(runningState);
         } else {
-            if(runningState == IPin.PinState.HIGH) {
-                this.runPin.digitalWrite(IPin.PinState.LOW);
+            if(runningState == IOutputPin.PinState.HIGH) {
+                this.runPin.digitalWrite(IOutputPin.PinState.LOW);
             } else {
-                this.runPin.digitalWrite(IPin.PinState.HIGH);
+                this.runPin.digitalWrite(IOutputPin.PinState.HIGH);
             }
         }
     }
@@ -35,16 +35,16 @@ public class DCMotor implements IDCMotor {
     public void setDirection(Direction direction) {
         this.direction = direction;
         if(this.direction == Direction.FORWARD) {
-            this.dirPin.digitalWrite(IPin.PinState.HIGH);
+            this.dirPin.digitalWrite(IOutputPin.PinState.HIGH);
         } else {
-            this.dirPin.digitalWrite(IPin.PinState.LOW);
+            this.dirPin.digitalWrite(IOutputPin.PinState.LOW);
         }
     }
 
     @Override
     public boolean isRunning() {
         if(running == null) {
-            running = runPin.isHigh() && runningState == IPin.PinState.HIGH;
+            running = runPin.isHigh() && runningState == IOutputPin.PinState.HIGH;
         }
         return running;
     }

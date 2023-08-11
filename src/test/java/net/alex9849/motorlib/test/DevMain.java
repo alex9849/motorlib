@@ -2,7 +2,7 @@ package net.alex9849.motorlib.test;
 
 import net.alex9849.motorlib.StepperDriver;
 import net.alex9849.motorlib.motor.AcceleratingStepper;
-import net.alex9849.motorlib.pin.IPin;
+import net.alex9849.motorlib.pin.IOutputPin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class DevMain {
 
     public static void main(String... args) throws InterruptedException {
 
-        IPin dummyPin = new IPin() {
+        IOutputPin dummyPin = new IOutputPin() {
             @Override
             public void digitalWrite(PinState value) {
 
