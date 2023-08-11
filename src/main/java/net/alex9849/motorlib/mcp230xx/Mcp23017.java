@@ -44,7 +44,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPIO A output register. Each bit represents the
+     * @return The raw GPIO A output register. Each bit represents the
      * output value of the associated pin (0 = low, 1 = high), assuming that
      * pin has been configured as an output previously.
      */
@@ -57,7 +57,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPIO B output register. Each bit represents the
+     * @return The raw GPIO B output register. Each bit represents the
      * output value of the associated pin (0 = low, 1 = high), assuming that
      * pin has been configured as an output previously.
      */
@@ -70,7 +70,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IODIR direction register. Each bit represents
+     * @return The raw IODIR direction register. Each bit represents
      * direction of a pin, either 1 for an input or 0 for an output mode.
      */
     public short getIoDir() {
@@ -82,7 +82,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IODIR A direction register. Each bit represents
+     * @return The raw IODIR A direction register. Each bit represents
      * direction of a pin, either 1 for an input or 0 for an output mode.
      */
     public byte getIoDirA() {
@@ -94,7 +94,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IODIR B direction register. Each bit represents
+     * @return The raw IODIR B direction register. Each bit represents
      * direction of a pin, either 1 for an input or 0 for an output mode.
      */
     public byte getIoDirB() {
@@ -106,7 +106,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPPU pull-up register. Each bit represents
+     * @return The raw GPPU pull-up register. Each bit represents
      * if a pull-up is enabled on the specified pin (1 = pull-up enabled,
      * 0 = pull-up disabled).  Note pull-down resistors are NOT supported!
      */
@@ -119,7 +119,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPPU A pull-up register. Each bit represents
+     * @return The raw GPPU A pull-up register. Each bit represents
      * if a pull-up is enabled on the specified pin (1 = pull-up enabled,
      * 0 = pull-up disabled). Note pull-down resistors are NOT supported!
      */
@@ -132,7 +132,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPPU B pull-up register. Each bit represents
+     * @return The raw GPPU B pull-up register. Each bit represents
      * if a pull-up is enabled on the specified pin (1 = pull-up enabled,
      * 0 = pull-up disabled).  Note pull-down resistors are NOT supported!
      */
@@ -145,7 +145,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IPOL output register. Each bit represents the
+     * @return The raw IPOL output register. Each bit represents the
      * polarity value of the associated pin (0 = normal, 1 = inverted), assuming that
      * pin has been configured as an input previously.
      */
@@ -158,7 +158,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IPOL A output register. Each bit represents the
+     * @return The raw IPOL A output register. Each bit represents the
      * polarity value of the associated pin (0 = normal, 1 = inverted), assuming that
      * pin has been configured as an input previously.
      */
@@ -171,7 +171,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IPOL B output register. Each bit represents the
+     * @return The raw IPOL B output register. Each bit represents the
      * polarity value of the associated pin (0 = normal, 1 = inverted), assuming that
      * pin has been configured as an input previously.
      */
@@ -184,7 +184,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw INTCON interrupt control register. The INTCON register
+     * @return The raw INTCON interrupt control register. The INTCON register
      * controls how the associated pin value is compared for the
      * interrupt-on-change feature. If a bit is set, the corresponding
      * I/O pin is  compared against the associated bit in the DEFVAL
@@ -200,7 +200,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw GPINTEN interrupt control register. The GPINTEN register
+     * @return The raw GPINTEN interrupt control register. The GPINTEN register
      * controls the interrupt-on-change feature for each pin. If a bit is
      * set, the corresponding pin is enabled for interrupt-on-change.
      * The DEFVAL and INTCON registers must also be configured if any pins
@@ -215,7 +215,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw DEFVAL interrupt control register. The default comparison
+     * @return The raw DEFVAL interrupt control register. The default comparison
      * value is configured in the DEFVAL register. If enabled (via GPINTEN
      * and INTCON) to compare against the DEFVAL register, an opposite value
      * on the associated pin will cause an interrupt to occur.
@@ -229,7 +229,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * The raw IOCON configuration register. Bit 1 controls interrupt
+     * @return The raw IOCON configuration register. Bit 1 controls interrupt
      * polarity (1 = active-high, 0 = active-low). Bit 2 is whether irq pin
      * is open drain (1 = open drain, 0 = push-pull). Bit 3 is unused.
      * Bit 4 is whether SDA slew rate is enabled (1 = yes). Bit 5 is if I2C
@@ -247,7 +247,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list with the pin-numbers that caused an interrupt
+     * @return Returns an array with the pin-numbers that caused an interrupt
      * port A ----> pins 0-7
      * port B ----> pins 8-15
      */
@@ -261,7 +261,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list of pin-numbers that caused an interrupt in port A
+     * @return An array of pin-numbers that caused an interrupt in port A
      * pins: 0-7
      */
     public short[] getFlagA() {
@@ -274,7 +274,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list of pin-numbers that caused an interrupt in port B
+     * @return An array of pin-numbers that caused an interrupt in port B
      * pins: 8-15
      */
     public short[] getFlagB() {
@@ -287,7 +287,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list with the pin values at time of interrupt
+     * @return An array with the pin values at time of interrupt
      * port A ----> pins 0-7
      * port B ----> pins 8-15
      */
@@ -301,7 +301,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list of pin values at time of interrupt
+     * @return An array of pin values at time of interrupt
      * pins: 0-7
      */
     public short[] getIntCapA() {
@@ -314,7 +314,7 @@ public class Mcp23017 extends Mcp230xx {
     }
 
     /**
-     * Returns a list of pin values at time of interrupt
+     * @return An array of pin values at time of interrupt
      * pins: 8-15
      */
     public short[] getIntCapB() {

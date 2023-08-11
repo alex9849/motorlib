@@ -3,8 +3,8 @@ package net.alex9849.motorlib.mcp230xx;
 import net.alex9849.motorlib.pin.IOutputPin;
 
 public class Mcp23xxxPin implements IOutputPin {
-    private byte pinNr;
-    private Mcp23xxx mcp23xxx;
+    private final byte pinNr;
+    private final Mcp23xxx mcp23xxx;
 
     public Mcp23xxxPin(byte pinNr, Mcp23xxx mcp23xxx) {
         this.pinNr = pinNr;
