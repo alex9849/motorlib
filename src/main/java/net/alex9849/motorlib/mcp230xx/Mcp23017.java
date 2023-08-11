@@ -248,8 +248,8 @@ public class Mcp23017 extends Mcp230xx {
 
     /**
      * @return Returns an array with the pin-numbers that caused an interrupt
-     * port A ----> pins 0-7
-     * port B ----> pins 8-15
+     * port A: pins 0-7
+     * port B: pins 8-15
      */
     public short[] getFlag() {
         short intf = this.read_u16le(MCP23017_INTFA);
@@ -288,8 +288,8 @@ public class Mcp23017 extends Mcp230xx {
 
     /**
      * @return An array with the pin values at time of interrupt
-     * port A ----> pins 0-7
-     * port B ----> pins 8-15
+     * port A: pins 0-7
+     * port B: pins 8-15
      */
     public short[] getIntCap() {
         short intCap = this.read_u16le(MCP23017_INTCAPA);

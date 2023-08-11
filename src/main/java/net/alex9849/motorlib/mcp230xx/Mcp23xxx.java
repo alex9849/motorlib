@@ -16,7 +16,7 @@ public abstract class Mcp23xxx {
     }
 
     /**
-     * The raw GPIO output register. Each bit represents the output value of
+     * @return The raw GPIO output register. Each bit represents the output value of
      * the associated pin (0 = low, 1 = high), assuming that pin has been
      * configured as an output previously.
      */
