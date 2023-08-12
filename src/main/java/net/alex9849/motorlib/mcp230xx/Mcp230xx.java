@@ -12,7 +12,8 @@ public abstract class Mcp230xx extends Mcp23xxx {
 
     protected short read_u16le(byte register) {
         ByteBuffer buf = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN);
-        device.getRegister(register).read(buf);
+        device.getRegister(register).read(buf, 2);
+        buf.position(0);
         return buf.getShort();
     }
 
