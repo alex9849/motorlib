@@ -9,8 +9,8 @@ public class Pi4JOutputPin implements IOutputPin {
     }
 
     @Override
-    public void digitalWrite(IOutputPin.PinState value) {
-        if(value == IOutputPin.PinState.HIGH) {
+    public void digitalWrite(PinState value) {
+        if(value == PinState.HIGH) {
             this.output.high();
         } else {
             this.output.low();

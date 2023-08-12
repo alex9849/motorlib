@@ -6,8 +6,8 @@ import net.alex9849.motorlib.motor.IStepperMotor;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.Pi4JOutputPin;
 
-import static net.alex9849.motorlib.pin.IOutputPin.PinState.HIGH;
-import static net.alex9849.motorlib.pin.IOutputPin.PinState.LOW;
+import static net.alex9849.motorlib.pin.PinState.HIGH;
+import static net.alex9849.motorlib.pin.PinState.LOW;
 
 public class StepperDriver implements IStepperMotor {
     private final IOutputPin enablePin;

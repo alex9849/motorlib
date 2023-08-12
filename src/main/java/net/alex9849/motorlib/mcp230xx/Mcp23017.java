@@ -28,7 +28,7 @@ public class Mcp23017 extends Mcp230xx {
     public Mcp23017(I2C i2cDevice, boolean reset) {
         super(i2cDevice);
         if(reset) {
-            this.setIoDir((short) 0xFFFF);
+            this.setIoDir((short) 0x0000);
             this.setGpio((short) 0x0000);
             this.setIoControl((byte) 0x4);
             this.write_u16le(MCP23017_IPOLA, (short) 0x0000);

@@ -6,8 +6,4 @@ public interface IOutputPin {
 
     boolean isHigh();
 
-    enum PinState {
-        HIGH, LOW
-    }
-
 }

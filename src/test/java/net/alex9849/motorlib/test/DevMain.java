@@ -3,6 +3,7 @@ package net.alex9849.motorlib.test;
 import net.alex9849.motorlib.StepperDriver;
 import net.alex9849.motorlib.motor.AcceleratingStepper;
 import net.alex9849.motorlib.pin.IOutputPin;
+import net.alex9849.motorlib.pin.PinState;
 
 import java.util.ArrayList;
 import java.util.List;

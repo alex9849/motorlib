@@ -24,7 +24,11 @@ public abstract class Mcp23xxx {
 
     public abstract void setGpio(short val);
 
-    public IOutputPin getPin(byte pin) {
+    public abstract short getIoDir();
+
+    public abstract void setIoDir(short value);
+
+    public synchronized IOutputPin getOutputPin(byte pin) {
         if(pin < 0 || pin > 15) {
             throw new IllegalArgumentException("Pin number must be 0-15");
         }

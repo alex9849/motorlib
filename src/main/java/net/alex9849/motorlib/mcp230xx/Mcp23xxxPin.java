@@ -1,6 +1,7 @@
 package net.alex9849.motorlib.mcp230xx;
 
 import net.alex9849.motorlib.pin.IOutputPin;
+import net.alex9849.motorlib.pin.PinState;
 
 public class Mcp23xxxPin implements IOutputPin {
     private final byte pinNr;
