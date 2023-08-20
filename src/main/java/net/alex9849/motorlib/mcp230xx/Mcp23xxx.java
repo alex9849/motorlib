@@ -38,4 +38,8 @@ public abstract class Mcp23xxx {
         return pinMap.get(pin);
     }
 
+    public boolean isOpen () {
+        return device.isOpen();
+    }
+
 }
