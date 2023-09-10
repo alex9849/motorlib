@@ -1,8 +1,6 @@
-package net.alex9849.motorlib;
+package net.alex9849.motorlib.motor;
 
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import net.alex9849.motorlib.motor.Direction;
-import net.alex9849.motorlib.motor.IStepperMotor;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.Pi4JOutputPin;
 
