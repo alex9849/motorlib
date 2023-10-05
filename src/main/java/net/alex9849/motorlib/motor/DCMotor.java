@@ -3,6 +3,8 @@ package net.alex9849.motorlib.motor;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.PinState;
 
+import java.util.Objects;
+
 public class DCMotor implements IDCMotor {
     private IOutputPin runPin;
     private IOutputPin dirPin;
@@ -60,5 +62,18 @@ public class DCMotor implements IDCMotor {
             }
         }
         return direction;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DCMotor dcMotor = (DCMotor) o;
+        return Objects.equals(runPin, dcMotor.runPin) && Objects.equals(dirPin, dcMotor.dirPin) && runningState == dcMotor.runningState;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(runPin, dirPin, runningState);
     }
 }
