@@ -43,7 +43,10 @@ public class HX711 {
             return readVal - emptyValue;
         }
 
-        return (readVal - emptyValue)*((calibrationWeight)/(calibrationValue - emptyValue));
+        double scaler = ((calibrationWeight)/((double)(calibrationValue - emptyValue)));
+        double weight = ((readVal - emptyValue) * scaler);
+
+        return (long) weight;
     }
 
     public void calibrateEmpty() {
