@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DevMain {
 
-    public static void main(String... args) {
+    public static void main(String... args) throws InterruptedException {
         Context pi4J = Pi4J.newAutoContext();
 
         DigitalInput dt = pi4J.digitalInput().create(20);

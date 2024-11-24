@@ -13,16 +13,16 @@ public class HX711 {
     public long calibrationValue = 0;
     public long calibrationWeight = 0;
 
-    public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) {
+    public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) throws InterruptedException {
         this.pinCLK = pinSCK;
         this.pinDAT = pinDAT;
         setGain(gain);
     }
 
-    public long read() {
+    public long read() throws InterruptedException {
         pinCLK.digitalWrite(PinState.LOW);
         while (!isReady()) {
-            sleep(1);
+            Thread.sleep(1);
         }
 
         long readVal = 0;
@@ -49,7 +49,7 @@ public class HX711 {
         return (long) weight;
     }
 
-    public void calibrateEmpty() {
+    public void calibrateEmpty() throws InterruptedException {
         long calibrationValue = this.calibrationValue;
         long calibrationWeight = this.calibrationWeight;
         this.calibrationValue = 0;
@@ -67,7 +67,7 @@ public class HX711 {
         this.emptyValue = emptyValue;
     }
 
-    public void calibrateWeighted(long calibrationWeight) {
+    public void calibrateWeighted(long calibrationWeight) throws InterruptedException {
         long emptyValue = this.emptyValue;
         this.calibrationValue = 0;
         this.calibrationWeight = 0;
@@ -85,7 +85,7 @@ public class HX711 {
         this.calibrationWeight = calibrationWeight;
     }
 
-    public void setGain(int gain) {
+    public void setGain(int gain) throws InterruptedException {
         switch (gain) {
             case 128:       // channel A, gain factor 128
                 this.gain = 24;
@@ -104,13 +104,6 @@ public class HX711 {
 
     public boolean isReady() {
         return !pinDAT.isHigh();
-    }
-
-    private void sleep(long delay) {
-        try {
-            Thread.sleep(delay);
-        } catch (Exception ex) {
-        }
     }
 
 }
