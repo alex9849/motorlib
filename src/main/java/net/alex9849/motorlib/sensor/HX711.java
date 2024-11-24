@@ -1,8 +1,11 @@
 package net.alex9849.motorlib.sensor;
 
+import net.alex9849.motorlib.exception.HX711Exception;
 import net.alex9849.motorlib.pin.IInputPin;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.PinState;
+
+import java.util.concurrent.TimeoutException;
 
 public class HX711 {
     private final IOutputPin pinCLK;
@@ -20,9 +23,17 @@ public class HX711 {
     }
 
     public long read() throws InterruptedException {
+        return read(1000);
+    }
+
+    public long read(long timeout) throws InterruptedException {
         pinCLK.digitalWrite(PinState.LOW);
+        long waitStart = System.currentTimeMillis();
         while (!isReady()) {
             Thread.sleep(1);
+            if(System.currentTimeMillis() - waitStart > timeout) {
+                throw new HX711Exception("Reading load cell time out!");
+            }
         }
 
         long readVal = 0;
