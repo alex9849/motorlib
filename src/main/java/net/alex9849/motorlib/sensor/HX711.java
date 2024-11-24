@@ -13,7 +13,7 @@ public class HX711 {
     public long calibrationValue = 0;
     public long calibrationWeight = 0;
 
-    public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) throws InterruptedException {
+    public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) {
         this.pinCLK = pinSCK;
         this.pinDAT = pinDAT;
         setGain(gain);
@@ -85,7 +85,7 @@ public class HX711 {
         this.calibrationWeight = calibrationWeight;
     }
 
-    public void setGain(int gain) throws InterruptedException {
+    public void setGain(int gain) {
         switch (gain) {
             case 128:       // channel A, gain factor 128
                 this.gain = 24;
@@ -97,9 +97,6 @@ public class HX711 {
                 this.gain = 25;
                 break;
         }
-
-        pinCLK.digitalWrite(PinState.LOW);
-        read();
     }
 
     public boolean isReady() {
