@@ -81,13 +81,17 @@ public class HX711 {
     }
 
     public synchronized void calibrateEmpty() throws InterruptedException {
+        calibrateEmpty(10);
+    }
+
+    public synchronized void calibrateEmpty(int readRounds) throws InterruptedException {
         long calibrationValue = this.calibrationValue;
         long calibrationWeight = this.calibrationWeight;
         this.calibrationValue = 0;
         this.calibrationWeight = 0;
         this.emptyValue = 0;
 
-        this.emptyValue = read();
+        this.emptyValue = read(readRounds);
 
         this.calibrationValue = calibrationValue;
         this.calibrationWeight = calibrationWeight;
@@ -99,12 +103,16 @@ public class HX711 {
     }
 
     public synchronized void calibrateWeighted(long calibrationWeight) throws InterruptedException {
+        calibrateWeighted(calibrationWeight, 10);
+    }
+
+    public synchronized void calibrateWeighted(long calibrationWeight, int readRounds) throws InterruptedException {
         long emptyValue = this.emptyValue;
         this.calibrationValue = 0;
         this.calibrationWeight = 0;
         this.emptyValue = 0;
 
-        this.calibrationValue = read();
+        this.calibrationValue = read(readRounds);
         this.calibrationWeight = calibrationWeight;
 
         this.emptyValue = emptyValue;
