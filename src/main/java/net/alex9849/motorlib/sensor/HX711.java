@@ -15,7 +15,6 @@ public class HX711 {
     public long emptyValue = 0;
     public long calibrationValue = 0;
     public long calibrationWeight = 0;
-    public int readRounds = 3;
 
     public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) {
         this.pinCLK = pinSCK;
@@ -28,6 +27,10 @@ public class HX711 {
     }
 
     public synchronized long read() throws InterruptedException {
+        return read(3);
+    }
+
+    public synchronized long read(int readRounds) throws InterruptedException {
         long[] reads = new long[readRounds];
         for (int i = 0; i < readRounds; i++) {
             reads[i] = read_once();
