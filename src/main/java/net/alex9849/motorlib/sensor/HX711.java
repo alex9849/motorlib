@@ -5,7 +5,7 @@ import net.alex9849.motorlib.pin.IInputPin;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.PinState;
 
-import java.util.concurrent.TimeoutException;
+import java.util.Arrays;
 
 public class HX711 {
     private final IOutputPin pinCLK;
@@ -15,18 +15,35 @@ public class HX711 {
     public long emptyValue = 0;
     public long calibrationValue = 0;
     public long calibrationWeight = 0;
+    public int readRounds = 3;
 
     public HX711(IInputPin pinDAT, IOutputPin pinSCK, int gain) {
         this.pinCLK = pinSCK;
         this.pinDAT = pinDAT;
         setGain(gain);
+        this.pinCLK.setWaitAfterWriteTimeNs(1_000_000); // 1 ms
+        this.pinCLK.digitalWriteAndWait(PinState.HIGH);
+        this.pinCLK.digitalWrite(PinState.LOW);
+        this.pinCLK.setWaitAfterWriteTimeNs(1_000); //1 us
     }
 
-    public long read() throws InterruptedException {
-        return read(1000);
+    public synchronized long read() throws InterruptedException {
+        long[] reads = new long[readRounds];
+        for (int i = 0; i < readRounds; i++) {
+            reads[i] = read_once();
+        }
+        Arrays.sort(reads);
+        if (reads.length % 2 == 0)
+            return (long) (((double)reads[reads.length/2] + (double)reads[reads.length/2 - 1])/2);
+        else
+            return reads[reads.length/2];
     }
 
-    public long read(long timeout) throws InterruptedException {
+    public synchronized long read_once() throws InterruptedException {
+        return read_once(1000);
+    }
+
+    public synchronized long read_once(long timeout) throws InterruptedException {
         pinCLK.digitalWrite(PinState.LOW);
         long waitStart = System.currentTimeMillis();
         while (!isReady()) {
@@ -38,17 +55,17 @@ public class HX711 {
 
         long readVal = 0;
         for (int i = 0; i < this.gain; i++) {
-            pinCLK.digitalWrite(PinState.HIGH);
+            pinCLK.digitalWriteAndWait(PinState.HIGH);
             readVal = readVal << 1;
-            pinCLK.digitalWrite(PinState.LOW);
+            pinCLK.digitalWriteAndWait(PinState.LOW);
             if (pinDAT.isHigh()) {
                 readVal++;
             }
         }
 
-        pinCLK.digitalWrite(PinState.HIGH);
+        pinCLK.digitalWriteAndWait(PinState.HIGH);
         readVal = readVal ^ 0x800000;
-        pinCLK.digitalWrite(PinState.LOW);
+        pinCLK.digitalWriteAndWait(PinState.LOW);
 
         if(calibrationValue - emptyValue == 0) {
             return readVal - emptyValue;
@@ -60,7 +77,7 @@ public class HX711 {
         return (long) weight;
     }
 
-    public void calibrateEmpty() throws InterruptedException {
+    public synchronized void calibrateEmpty() throws InterruptedException {
         long calibrationValue = this.calibrationValue;
         long calibrationWeight = this.calibrationWeight;
         this.calibrationValue = 0;
@@ -74,11 +91,11 @@ public class HX711 {
 
     }
 
-    public void calibrateEmpty(long emptyValue) {
+    public synchronized void calibrateEmpty(long emptyValue) {
         this.emptyValue = emptyValue;
     }
 
-    public void calibrateWeighted(long calibrationWeight) throws InterruptedException {
+    public synchronized void calibrateWeighted(long calibrationWeight) throws InterruptedException {
         long emptyValue = this.emptyValue;
         this.calibrationValue = 0;
         this.calibrationWeight = 0;
@@ -91,12 +108,12 @@ public class HX711 {
 
     }
 
-    public void calibrateWeighted(long calibrationWeight, long calibrationValue) {
+    public synchronized void calibrateWeighted(long calibrationWeight, long calibrationValue) {
         this.calibrationValue = calibrationValue;
         this.calibrationWeight = calibrationWeight;
     }
 
-    public void setGain(int gain) {
+    public synchronized void setGain(int gain) {
         switch (gain) {
             case 128:       // channel A, gain factor 128
                 this.gain = 24;
@@ -110,7 +127,7 @@ public class HX711 {
         }
     }
 
-    public boolean isReady() {
+    public synchronized boolean isReady() {
         return !pinDAT.isHigh();
     }
 
