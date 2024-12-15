@@ -19,7 +19,7 @@ public class StepperDriver implements IStepperMotor {
     public StepperDriver(IOutputPin enablePin, IOutputPin stepPin, IOutputPin directionPin) {
         this.enablePin = enablePin;
         this.stepPin = stepPin;
-        this.stepPin.setWaitAfterWriteTimeNs(1_000);
+        this.stepPin.setWaitAfterWriteTimeNs(2_500);
         this.directionPin = directionPin;
     }
 
@@ -49,8 +49,8 @@ public class StepperDriver implements IStepperMotor {
         if(!this.isEnabled()) {
             setEnable(true);
         }
-        stepPin.digitalWrite(HIGH);
-        stepPin.digitalWrite(LOW);
+        stepPin.digitalWriteAndWait(HIGH);
+        stepPin.digitalWriteAndWait(LOW);
     }
 
     @Override
