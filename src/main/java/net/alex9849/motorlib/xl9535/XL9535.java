@@ -5,7 +5,7 @@ import com.pi4j.io.i2c.I2C;
 public class XL9535 {
 
     enum PORT {
-        OUTPUT_0(0x02b), INVERSION(0x04), CONFIG_0(0x06)
+        OUTPUT_0(0x02b), INVERSION(0x04), CONFIG_0(0x06);
 
         final int register;
         PORT(int register) {
