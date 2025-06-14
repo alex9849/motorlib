@@ -5,7 +5,7 @@ import com.pi4j.io.i2c.I2C;
 public class XL9535 {
 
     enum PORT {
-        OUTPUT_0(0x02b), INVERSION(0x04), CONFIG_0(0x06);
+        OUTPUT_0(2), INVERSION_0(4), CONFIG_0(6);
 
         final int register;
         PORT(int register) {
@@ -22,28 +22,52 @@ public class XL9535 {
     }
 
     private void init() {
-        this.buf[0] = (byte) 0x00;
-        this.buf[1] = (byte) 0x00;
+        this.buf[0] = (byte) 0;
+        this.buf[1] = (byte) 0;
 
-        this.i2c.writeRegister(PORT.INVERSION.register, this.buf);
+        this.i2c.writeRegister(PORT.INVERSION_0.register, this.buf);
         this.i2c.writeRegister(PORT.OUTPUT_0.register, this.buf);
         this.i2c.writeRegister(PORT.CONFIG_0.register, this.buf);
     }
 
-    public boolean relay(int num, Boolean value) {
+    public void writeAll(boolean value) {
+        if (value) {
+            writeAll((short) 65535);
+        } else {
+            writeAll((short) 0);
+        }
+    }
+
+    public void writeAll(short value) {
+        this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
+        this.buf[0] = (byte) value;
+        this.buf[1] = (byte) (value >> 8);
+        this.i2c.writeRegister(PORT.OUTPUT_0.register, this.buf);
+    }
+
+    public short readAll() {
+        this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
+        return (short) ((this.buf[1] << 8) | this.buf[0]);
+    }
+
+    public void writeRegister(int num, boolean value) {
         assert num >= 0 && num <= 15;
         byte p = (byte) (num / 8);
         byte b = (byte) (1 << (num % 8));
         this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
-        if (value == null) {
-            return (this.buf[p] & b) != 0;
-        }
         this.buf[p] &= (byte) ~b;
         if (value) {
             this.buf[p] |= b;
         }
-        this.i2c.writeRegister(PORT.CONFIG_0.register, this.buf);
-        return value;
+        this.i2c.writeRegister(PORT.OUTPUT_0.register, this.buf);
+    }
+
+    public boolean readRegister(int num) {
+        assert num >= 0 && num <= 15;
+        byte p = (byte) (num / 8);
+        byte b = (byte) (1 << (num % 8));
+        this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
+        return (this.buf[p] & b) != 0;
     }
 
 }

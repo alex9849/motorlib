@@ -30,7 +30,11 @@ public class Main {
         I2CConfig i2CConfig = I2C.newConfigBuilder(pi4J).bus(1).device(0x20).build();
         I2C i2c = i2CProvider.create(i2CConfig);
         XL9535 xl9535 = new XL9535(i2c);
-        xl9535.relay(1, true);
+        xl9535.writeAll(true);
+        console.box(String.valueOf(xl9535.readRegister(2)));
+        Thread.sleep(2000);
+        xl9535.writeAll(false);
+        console.box(String.valueOf(xl9535.readRegister(2)));
     }
 
 }
