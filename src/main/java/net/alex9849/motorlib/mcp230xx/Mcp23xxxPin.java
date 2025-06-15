@@ -1,9 +1,10 @@
 package net.alex9849.motorlib.mcp230xx;
 
+import net.alex9849.motorlib.pin.AbstractOutputPin;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.PinState;
 
-public class Mcp23xxxPin implements IOutputPin {
+public class Mcp23xxxPin extends AbstractOutputPin {
     private final byte pinNr;
     private final Mcp23xxx mcp23xxx;
 

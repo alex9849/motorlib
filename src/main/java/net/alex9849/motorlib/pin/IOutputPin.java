@@ -6,4 +6,8 @@ public interface IOutputPin {
 
     boolean isHigh();
 
+    void digitalWriteAndWait(PinState state);
+
+    void setWaitAfterWriteTimeNs(long waitAfterWriteTimeNs);
+
 }

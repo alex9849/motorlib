@@ -4,6 +4,8 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import net.alex9849.motorlib.pin.IOutputPin;
 import net.alex9849.motorlib.pin.Pi4JOutputPin;
 
+import java.util.Objects;
+
 import static net.alex9849.motorlib.pin.PinState.HIGH;
 import static net.alex9849.motorlib.pin.PinState.LOW;
 
@@ -17,6 +19,7 @@ public class StepperDriver implements IStepperMotor {
     public StepperDriver(IOutputPin enablePin, IOutputPin stepPin, IOutputPin directionPin) {
         this.enablePin = enablePin;
         this.stepPin = stepPin;
+        this.stepPin.setWaitAfterWriteTimeNs(2_500);
         this.directionPin = directionPin;
     }
 
@@ -46,8 +49,8 @@ public class StepperDriver implements IStepperMotor {
         if(!this.isEnabled()) {
             setEnable(true);
         }
-        stepPin.digitalWrite(HIGH);
-        stepPin.digitalWrite(LOW);
+        stepPin.digitalWriteAndWait(HIGH);
+        stepPin.digitalWriteAndWait(LOW);
     }
 
     @Override
@@ -78,5 +81,18 @@ public class StepperDriver implements IStepperMotor {
         this.stepPin.digitalWrite(LOW);
         this.direction = null;
         this.enabled = null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StepperDriver that = (StepperDriver) o;
+        return Objects.equals(enablePin, that.enablePin) && Objects.equals(stepPin, that.stepPin) && Objects.equals(directionPin, that.directionPin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(enablePin, stepPin, directionPin);
     }
 }

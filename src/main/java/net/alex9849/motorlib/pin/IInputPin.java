@@ -4,6 +4,6 @@ public interface IInputPin {
 
     boolean isHigh();
 
-    void setPull();
+    boolean isPull();
 
 }
