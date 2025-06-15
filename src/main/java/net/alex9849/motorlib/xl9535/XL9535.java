@@ -1,10 +1,11 @@
 package net.alex9849.motorlib.xl9535;
 
 import com.pi4j.io.i2c.I2C;
+import net.alex9849.motorlib.I2CPinExpander;
 import net.alex9849.motorlib.mcp230xx.Mcp23xxxPin;
 import net.alex9849.motorlib.pin.IOutputPin;
 
-public class XL9535 {
+public class XL9535 implements I2CPinExpander {
 
     enum PORT {
         OUTPUT_0(2), INVERSION_0(4), CONFIG_0(6);
@@ -77,6 +78,10 @@ public class XL9535 {
         byte b = (byte) (1 << (num % 8));
         this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
         return (this.buf[p] & b) != 0;
+    }
+
+    public boolean isOpen () {
+        return i2c.isOpen();
     }
 
 }

@@ -1,12 +1,13 @@
 package net.alex9849.motorlib.mcp230xx;
 
 import com.pi4j.io.i2c.I2C;
+import net.alex9849.motorlib.I2CPinExpander;
 import net.alex9849.motorlib.pin.IOutputPin;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Mcp23xxx {
+public abstract class Mcp23xxx implements I2CPinExpander {
     protected final I2C device;
     private final Map<Byte, IOutputPin> pinMap;
 
