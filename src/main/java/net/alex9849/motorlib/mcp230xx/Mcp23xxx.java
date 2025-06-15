@@ -1,7 +1,7 @@
 package net.alex9849.motorlib.mcp230xx;
 
 import com.pi4j.io.i2c.I2C;
-import net.alex9849.motorlib.I2CPinExpander;
+import net.alex9849.motorlib.pin.I2CPinExpander;
 import net.alex9849.motorlib.pin.IOutputPin;
 
 import java.util.HashMap;

@@ -1,8 +1,7 @@
 package net.alex9849.motorlib.xl9535;
 
 import com.pi4j.io.i2c.I2C;
-import net.alex9849.motorlib.I2CPinExpander;
-import net.alex9849.motorlib.mcp230xx.Mcp23xxxPin;
+import net.alex9849.motorlib.pin.I2CPinExpander;
 import net.alex9849.motorlib.pin.IOutputPin;
 
 public class XL9535 implements I2CPinExpander {

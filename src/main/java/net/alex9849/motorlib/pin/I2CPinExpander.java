@@ -1,6 +1,4 @@
-package net.alex9849.motorlib;
-
-import net.alex9849.motorlib.pin.IOutputPin;
+package net.alex9849.motorlib.pin;
 
 public interface I2CPinExpander {
 

@@ -1,9 +1,9 @@
 package net.alex9849.motorlib.xl9535;
 
-import net.alex9849.motorlib.pin.IOutputPin;
+import net.alex9849.motorlib.pin.AbstractOutputPin;
 import net.alex9849.motorlib.pin.PinState;
 
-public class XL9535Pin implements IOutputPin {
+public class XL9535Pin extends AbstractOutputPin {
     private final byte pinNr;
     private final XL9535 xl9535;
 
