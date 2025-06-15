@@ -24,7 +24,6 @@
         <jvmargs.run></jvmargs.run>
         <jvmargs.debug></jvmargs.debug>
 
-        <slf4j.version>1.7.32</slf4j.version>
         <pi4j.version>2.4.0</pi4j.version>
     </properties>
 
@@ -40,17 +39,6 @@
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
         <!-- include Pi4J Core -->
         <dependency>
             <groupId>com.pi4j</groupId>

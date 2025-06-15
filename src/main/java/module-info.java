@@ -1,6 +1,4 @@
 module net.alex9849.motorlib.motorlib {
-    requires org.slf4j;             //slf4j-api-2.0.0-alpha1.jar
-    requires org.slf4j.simple;      //slf4j-simple-2.0.0-alpha1.jar & simplelogger.properties
     requires com.pi4j;
     requires com.pi4j.plugin.raspberrypi;
     requires com.pi4j.plugin.pigpio;
