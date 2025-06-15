@@ -31,10 +31,10 @@ public class Main {
         I2C i2c = i2CProvider.create(i2CConfig);
         XL9535 xl9535 = new XL9535(i2c);
         xl9535.writeAll(true);
-        console.box(String.valueOf(xl9535.readRegister(2)));
+        console.box(String.valueOf(xl9535.readAll()));
         Thread.sleep(2000);
         xl9535.writeAll(false);
-        console.box(String.valueOf(xl9535.readRegister(2)));
+        console.box(String.valueOf(xl9535.readAll()));
     }
 
 }
