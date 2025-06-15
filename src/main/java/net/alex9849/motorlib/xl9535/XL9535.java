@@ -1,6 +1,8 @@
 package net.alex9849.motorlib.xl9535;
 
 import com.pi4j.io.i2c.I2C;
+import net.alex9849.motorlib.mcp230xx.Mcp23xxxPin;
+import net.alex9849.motorlib.pin.IOutputPin;
 
 public class XL9535 {
 
@@ -28,6 +30,13 @@ public class XL9535 {
         this.i2c.writeRegister(PORT.INVERSION_0.register, this.buf);
         this.i2c.writeRegister(PORT.OUTPUT_0.register, this.buf);
         this.i2c.writeRegister(PORT.CONFIG_0.register, this.buf);
+    }
+
+    public synchronized IOutputPin getOutputPin(byte pin) {
+        if (pin < 0 || pin > 15) {
+            throw new IllegalArgumentException("Pin number must be 0-15");
+        }
+        return new XL9535Pin(pin, this);
     }
 
     public void writeAll(boolean value) {
