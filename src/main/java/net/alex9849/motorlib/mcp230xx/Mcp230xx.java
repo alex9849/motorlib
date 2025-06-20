@@ -10,24 +10,24 @@ public abstract class Mcp230xx extends Mcp23xxx {
         super(i2cDevice);
     }
 
-    protected short read_u16le(byte register) {
+    protected synchronized short read_u16le(byte register) {
         ByteBuffer buf = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN);
         device.getRegister(register).read(buf, 2);
         buf.position(0);
         return buf.getShort();
     }
 
-    protected void write_u16le(byte register, short value) {
+    protected synchronized void write_u16le(byte register, short value) {
         ByteBuffer buf = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN);
         buf.putShort(value);
         device.getRegister(register).write(buf);
     }
 
-    protected byte read_u8(int register) {
+    protected synchronized byte read_u8(int register) {
         return device.getRegister(register).readByte();
     }
 
-    protected void write_u8(int register, byte value) {
+    protected synchronized void write_u8(int register, byte value) {
         device.getRegister(register).write(value);
     }
 }

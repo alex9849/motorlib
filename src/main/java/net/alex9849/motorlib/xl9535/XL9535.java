@@ -16,14 +16,14 @@ public class XL9535 implements I2CPinExpander {
     }
 
     private final I2C i2c;
-    private byte[] buf = new byte[2];
+    private final byte[] buf = new byte[2];
 
     public XL9535(I2C i2c) {
         this.i2c = i2c;
         this.init();
     }
 
-    private void init() {
+    private synchronized void init() {
         this.buf[0] = (byte) 0;
         this.buf[1] = (byte) 0;
 
@@ -39,7 +39,7 @@ public class XL9535 implements I2CPinExpander {
         return new XL9535Pin(pin, this);
     }
 
-    public void writeAll(boolean value) {
+    public synchronized void writeAll(boolean value) {
         if (value) {
             writeAll((short) 65535);
         } else {
@@ -47,7 +47,7 @@ public class XL9535 implements I2CPinExpander {
         }
     }
 
-    public void writeAll(short value) {
+    public synchronized void writeAll(short value) {
         this.i2c.readRegister(PORT.OUTPUT_0.register, this.buf);
         this.buf[0] = (byte) value;
         this.buf[1] = (byte) (value >> 8);
@@ -59,7 +59,7 @@ public class XL9535 implements I2CPinExpander {
         return (short) ((this.buf[1] << 8) | this.buf[0]);
     }
 
-    public void writeRegister(int num, boolean value) {
+    public synchronized void writeRegister(int num, boolean value) {
         assert num >= 0 && num <= 15;
         byte p = (byte) (num / 8);
         byte b = (byte) (1 << (num % 8));
@@ -71,7 +71,7 @@ public class XL9535 implements I2CPinExpander {
         this.i2c.writeRegister(PORT.OUTPUT_0.register, this.buf);
     }
 
-    public boolean readRegister(int num) {
+    public synchronized boolean readRegister(int num) {
         assert num >= 0 && num <= 15;
         byte p = (byte) (num / 8);
         byte b = (byte) (1 << (num % 8));
@@ -79,7 +79,7 @@ public class XL9535 implements I2CPinExpander {
         return (this.buf[p] & b) != 0;
     }
 
-    public boolean isOpen () {
+    public synchronized boolean isOpen () {
         return i2c.isOpen();
     }
 
