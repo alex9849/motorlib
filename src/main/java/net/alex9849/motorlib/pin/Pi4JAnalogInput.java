@@ -1,8 +1,6 @@
 package net.alex9849.motorlib.pin;
 
-import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.analog.AnalogInput;
-import net.alex9849.motorlib.exception.GpioPinException;
 
 public class Pi4JAnalogInput implements IAnalogInput {
     private final AnalogInput input;
@@ -13,10 +11,6 @@ public class Pi4JAnalogInput implements IAnalogInput {
 
     @Override
     public int getValue() {
-        try {
-            return input.value();
-        } catch (Pi4JException e) {
-            throw new GpioPinException(e);
-        }
+        return input.value();
     }
 }
