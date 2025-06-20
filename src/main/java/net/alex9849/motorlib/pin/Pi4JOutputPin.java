@@ -1,6 +1,8 @@
 package net.alex9849.motorlib.pin;
 
+import com.pi4j.exception.Pi4JException;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import net.alex9849.motorlib.exception.GpioPinException;
 
 public class Pi4JOutputPin extends AbstractOutputPin {
     private DigitalOutput output;
@@ -13,16 +15,24 @@ public class Pi4JOutputPin extends AbstractOutputPin {
 
     @Override
     public void digitalWrite(PinState value) {
-        if(value == PinState.HIGH) {
-            this.output.high();
-        } else {
-            this.output.low();
+        try {
+            if(value == PinState.HIGH) {
+                this.output.high();
+            } else {
+                this.output.low();
+            }
+        } catch (Pi4JException e) {
+            throw new GpioPinException(e);
         }
     }
 
     @Override
     public boolean isHigh() {
-        return this.output.isHigh();
+        try {
+            return this.output.isHigh();
+        } catch (Pi4JException e) {
+            throw new GpioPinException(e);
+        }
     }
 
 }
