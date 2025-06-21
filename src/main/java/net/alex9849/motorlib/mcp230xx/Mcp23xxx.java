@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Mcp23xxx implements I2CPinExpander {
-    protected final I2C device;
+    protected I2C device;
     private final Map<Byte, IOutputPin> pinMap;
 
     public Mcp23xxx(I2C device) {
@@ -37,6 +37,11 @@ public abstract class Mcp23xxx implements I2CPinExpander {
             pinMap.put(pin, new Mcp23xxxPin(pin, this));
         }
         return pinMap.get(pin);
+    }
+
+    @Override
+    public void updateI2c(I2C device, boolean reset) {
+        this.device = device;
     }
 
     public boolean isOpen () {

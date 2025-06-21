@@ -28,11 +28,15 @@ public class Mcp23017 extends Mcp230xx {
     public Mcp23017(I2C i2cDevice, boolean reset) {
         super(i2cDevice);
         if(reset) {
-            this.setIoDir((short) 0x0000);
-            this.setGpio((short) 0x0000);
-            this.setIoControl((byte) 0x4);
-            this.write_u16le(MCP23017_IPOLA, (short) 0x0000);
+            this.reset();
         }
+    }
+
+    private synchronized void reset() {
+        this.setIoDir((short) 0x0000);
+        this.setGpio((short) 0x0000);
+        this.setIoControl((byte) 0x4);
+        this.write_u16le(MCP23017_IPOLA, (short) 0x0000);
     }
 
     public synchronized short getGpio() {
@@ -345,6 +349,14 @@ public class Mcp23017 extends Mcp230xx {
      */
     public synchronized void cleanIntsB() {
         read_u8(MCP23017_INTCAPB);
+    }
+
+    @Override
+    public void updateI2c(I2C device, boolean reset) {
+        super.updateI2c(device, reset);
+        if(reset) {
+            this.reset();
+        }
     }
 
 }
